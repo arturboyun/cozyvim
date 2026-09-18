@@ -1,0 +1,100 @@
+_version: 1
+
+app:
+  name: cozyvim
+  tagline: Уютный тренажёр vim
+
+nav:
+  map: Карта
+  stats: Статистика
+  settings: Настройки
+  back: Назад
+
+onboarding:
+  lang_title: Выбери язык
+  lang_sub: Объяснения будут на нём. Команды vim останутся как есть.
+  exp_title: Насколько ты знаком с vim?
+  exp_sub: От ответа зависит, с чего начать и насколько строго проверять.
+  exp_newcomer: Первый раз слышу
+  exp_newcomer_sub: Начнём с движения курсора, проверка мягкая
+  exp_dabbler: Пробовал, но выхожу через :q!
+  exp_dabbler_sub: Первые главы пройдёшь быстро
+  exp_confident: Уверенно пользуюсь
+  exp_confident_sub: Включим строгую проверку нажатий
+  mode_title: Как проверять упражнения?
+  mode_sub: Это можно поменять в любой момент в настройках.
+  ready_title: Готово
+  ready_sub: Начнём с движения курсора. Клавиатура внизу экрана подскажет, где что.
+  start: Начать
+  next: Дальше
+
+mode:
+  mix: Микс
+  mix_sub: Засчитывается любой путь к цели, звёзды — за оптимальность
+  strict: Строгий
+  strict_sub: Засчитывается только точная последовательность нажатий
+  free: Свободный
+  free_sub: Засчитывается любой путь, оптимум показываем справочно
+
+map:
+  title: Главы
+  locked: Откроется после предыдущей главы
+  coming_soon: Скоро
+  lessons: "уроков: %{count}"
+  exercises: "упражнений: %{count}"
+  progress: "%{done} из %{total}"
+
+lesson:
+  task: Задание
+  hint: Подсказка
+  show_hint: Подсказка
+  reset: Сброс
+  menu: В меню
+  keyboard: Клавиатура
+  pressed: Нажато
+  exercise: "Упражнение %{i} из %{n}"
+  optimal: "Оптимум: %{keys} — %{n} нажатий"
+  your_keys: "Твои нажатия: %{n}"
+  success: Готово
+  failed: Не то
+  expected: "Ожидалось: %{keys}"
+  next: Следующее упражнение
+  retry: Ещё раз
+  finish: Завершить урок
+  done_title: Урок пройден
+  unsupported: Эту команду тренажёр пока не умеет
+  mode_normal: НОРМАЛЬНЫЙ
+  mode_insert: ВСТАВКА
+  mode_visual: ВИЗУАЛЬНЫЙ
+  mode_vline: ВИЗУАЛЬНЫЙ СТРОКИ
+  goal: Цель
+  keyboard_hidden: Клавиатура спрятана — ты уже не смотришь на клавиши
+
+stats:
+  title: Статистика
+  stars: Звёзды
+  exercises: Упражнений пройдено
+  streak: Дней подряд
+  problems: Слабые места
+  problems_empty: Пока ни одного провала — так держать
+  problems_hint: Чаще всего спотыкаешься на этих командах
+  efficiency: Нажатия против оптимума
+  efficiency_empty: Пройди пару упражнений, и здесь появится график
+  activity: Активность по дням
+  attempts: "попыток: %{n}"
+
+settings:
+  title: Настройки
+  lang: Язык
+  mode: Проверка упражнений
+  theme: Тема
+  theme_dark: Тёмная
+  theme_light: Светлая
+  keyboard: Экранная клавиатура
+  keyboard_auto: Автоматически
+  keyboard_always: Всегда
+  keyboard_never: Никогда
+  reset_progress: Сбросить прогресс
+  reset_confirm: Точно стереть весь прогресс?
+  reset_yes: Да, стереть
+  reset_no: Отмена

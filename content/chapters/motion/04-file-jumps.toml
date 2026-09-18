@@ -1,0 +1,69 @@
+id = "motion/file-jumps"
+chapter = "motion"
+order = 4
+
+[text.ru]
+title = "По файлу: gg G 5G"
+intro = """
+gg — в начало файла, G — в конец. Число перед G ведёт на строку с этим
+номером: 5G — на пятую. Это первое место, где число перед командой значит
+не «повтори столько раз», а «вот адрес».
+"""
+[text.en]
+title = "Across the file: gg G 5G"
+intro = """
+gg goes to the top, G to the bottom. A count before G means a line number:
+5G goes to line five.
+"""
+
+[[exercise]]
+buffer = ["один", "два", "три", "четыре", "пять", "шесть"]
+cursor = [0, 0]
+goal = ["один", "два", "три", "четыре", "пять", "шесть"]
+goal_cursor = [5, 0]
+solutions = ["G", "5j"]
+[exercise.text.ru]
+task = "Прыгни на последнюю строку."
+hint = "G — конец файла, сколько бы строк в нём ни было."
+[exercise.text.en]
+task = "Jump to the last line."
+hint = "G is the end of the file, however long it is."
+
+[[exercise]]
+buffer = ["один", "два", "три", "четыре", "пять", "шесть"]
+cursor = [5, 0]
+goal = ["один", "два", "три", "четыре", "пять", "шесть"]
+goal_cursor = [0, 0]
+solutions = ["gg", "5k"]
+[exercise.text.ru]
+task = "Вернись на первую строку."
+hint = "gg — начало файла."
+[exercise.text.en]
+task = "Go back to the first line."
+hint = "gg is the top of the file."
+
+[[exercise]]
+buffer = ["один", "два", "три", "четыре", "пять", "шесть"]
+cursor = [0, 0]
+goal = ["один", "два", "три", "четыре", "пять", "шесть"]
+goal_cursor = [3, 0]
+solutions = ["4G", "3j"]
+[exercise.text.ru]
+task = "Прыгни на четвёртую строку — на слово «четыре»."
+hint = "Номер строки, потом G: 4G."
+[exercise.text.en]
+task = "Jump to line four."
+hint = "Line number, then G: 4G."
+
+[[exercise]]
+buffer = ["fn a() {}", "fn b() {}", "fn c() {}", "fn d() {}", "fn e() {}"]
+cursor = [4, 0]
+goal = ["fn a() {}", "fn b() {}", "fn c() {}", "fn d() {}", "fn e() {}"]
+goal_cursor = [1, 3]
+solutions = ["2Gw", "2G3l", "3kw"]
+[exercise.text.ru]
+task = "Встань на имя b во второй строке."
+hint = "Сначала адрес строки, потом движение внутри неё."
+[exercise.text.en]
+task = "Land on the name b on line two."
+hint = "First the line address, then a motion inside it."

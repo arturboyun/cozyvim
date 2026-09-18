@@ -1,0 +1,69 @@
+id = "motion/line-ends"
+chapter = "motion"
+order = 3
+
+[text.ru]
+title = "Края строки: 0 ^ $"
+intro = """
+0 — в самый первый столбец. ^ — на первый непробельный символ, то есть на
+начало кода после отступа. $ — в конец строки.
+В отступленном коде почти всегда нужен ^, а не 0.
+"""
+[text.en]
+title = "Line edges: 0 ^ $"
+intro = """
+0 goes to column one. ^ goes to the first non-blank character — the start of
+the code after the indent. $ goes to the end of the line.
+"""
+
+[[exercise]]
+buffer = ["    let x = 1;"]
+cursor = [0, 9]
+goal = ["    let x = 1;"]
+goal_cursor = [0, 13]
+solutions = ["$"]
+[exercise.text.ru]
+task = "Встань на точку с запятой в конце строки."
+hint = "$ — конец строки, независимо от её длины."
+[exercise.text.en]
+task = "Land on the semicolon at the end of the line."
+hint = "$ is the end of the line, whatever its length."
+
+[[exercise]]
+buffer = ["    let x = 1;"]
+cursor = [0, 9]
+goal = ["    let x = 1;"]
+goal_cursor = [0, 0]
+solutions = ["0"]
+[exercise.text.ru]
+task = "Встань в самый первый столбец, в отступ."
+hint = "0 — нулевой столбец, он же начало строки."
+[exercise.text.en]
+task = "Go to the very first column, inside the indent."
+hint = "0 is column zero."
+
+[[exercise]]
+buffer = ["    let x = 1;"]
+cursor = [0, 12]
+goal = ["    let x = 1;"]
+goal_cursor = [0, 4]
+solutions = ["^"]
+[exercise.text.ru]
+task = "Встань на букву l — начало кода после отступа."
+hint = "^ пропускает отступ и встаёт на первый видимый символ."
+[exercise.text.en]
+task = "Land on the l — the first character after the indent."
+hint = "^ skips the indent."
+
+[[exercise]]
+buffer = ["fn main() {", "    let total = 0;", "}"]
+cursor = [0, 0]
+goal = ["fn main() {", "    let total = 0;", "}"]
+goal_cursor = [1, 17]
+solutions = ["j$"]
+[exercise.text.ru]
+task = "Перейди на вторую строку и встань в её конец."
+hint = "Команды складываются: сначала j, потом $."
+[exercise.text.en]
+task = "Move to the second line and go to its end."
+hint = "Commands compose: j, then $."

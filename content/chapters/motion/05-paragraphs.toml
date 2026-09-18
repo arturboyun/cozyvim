@@ -1,0 +1,56 @@
+id = "motion/paragraphs"
+chapter = "motion"
+order = 5
+
+[text.ru]
+title = "Абзацы: { }"
+intro = """
+} прыгает к следующей пустой строке, { — к предыдущей. В коде пустые строки
+разделяют функции и блоки, поэтому { и } — это быстрая навигация по смыслу,
+а не по количеству строк.
+"""
+[text.en]
+title = "Paragraphs: { }"
+intro = """
+} jumps to the next blank line, { to the previous one. In code, blank lines
+separate blocks — so these jump by meaning, not by line count.
+"""
+
+[[exercise]]
+buffer = ["fn one() {}", "", "fn two() {}", "", "fn three() {}"]
+cursor = [0, 0]
+goal = ["fn one() {}", "", "fn two() {}", "", "fn three() {}"]
+goal_cursor = [1, 0]
+solutions = ["}", "j"]
+[exercise.text.ru]
+task = "Прыгни к ближайшей пустой строке ниже."
+hint = "} — следующая пустая строка."
+[exercise.text.en]
+task = "Jump to the nearest blank line below."
+hint = "} is the next blank line."
+
+[[exercise]]
+buffer = ["fn one() {}", "", "fn two() {}", "", "fn three() {}"]
+cursor = [0, 0]
+goal = ["fn one() {}", "", "fn two() {}", "", "fn three() {}"]
+goal_cursor = [3, 0]
+solutions = ["2}", "}}"]
+[exercise.text.ru]
+task = "Перепрыгни через функцию two — на пустую строку перед three."
+hint = "Счётчик работает и здесь: 2}."
+[exercise.text.en]
+task = "Jump past function two to the blank line before three."
+hint = "Counts work here too: 2}."
+
+[[exercise]]
+buffer = ["fn one() {}", "", "fn two() {}", "", "fn three() {}"]
+cursor = [4, 0]
+goal = ["fn one() {}", "", "fn two() {}", "", "fn three() {}"]
+goal_cursor = [1, 0]
+solutions = ["2{", "{{"]
+[exercise.text.ru]
+task = "Вернись к пустой строке после первой функции."
+hint = "{ — предыдущая пустая строка."
+[exercise.text.en]
+task = "Go back to the blank line after the first function."
+hint = "{ is the previous blank line."

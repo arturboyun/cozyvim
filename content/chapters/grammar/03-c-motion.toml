@@ -1,0 +1,68 @@
+id = "grammar/c-motion"
+chapter = "grammar"
+order = 12
+
+[text.ru]
+title = "c + движение"
+intro = """
+c — «изменить»: удаляет ровно то же, что удалил бы d, и сразу оставляет тебя
+в режиме вставки. cw, c$, cc — та же грамматика, просто другой оператор.
+
+Одна тонкость: cw ведёт себя как ce, то есть не съедает пробел после слова.
+Это единственное исключение, которое стоит запомнить, и оно ровно про то,
+чего ты на самом деле хочешь при переименовании.
+"""
+[text.en]
+title = "c + motion"
+intro = """
+c means change: it deletes exactly what d would and drops you into insert mode.
+One quirk: cw behaves like ce, leaving the following space alone.
+"""
+
+[[exercise]]
+buffer = ["let foo = 42;"]
+cursor = [0, 4]
+goal = ["let bar = 42;"]
+solutions = ["cwbar<Esc>"]
+[exercise.text.ru]
+task = "Переименуй foo в bar."
+hint = "cw удаляет слово и сразу пускает печатать."
+[exercise.text.en]
+task = "Rename foo to bar."
+hint = "cw deletes the word and lets you type."
+
+[[exercise]]
+buffer = ["fn old_name() {}"]
+cursor = [0, 3]
+goal = ["fn new() {}"]
+solutions = ["cwnew<Esc>"]
+[exercise.text.ru]
+task = "Переименуй old_name в new."
+hint = "Подчёркивание — часть слова, cw заберёт имя целиком."
+[exercise.text.en]
+task = "Rename old_name to new."
+hint = "An underscore is part of the word."
+
+[[exercise]]
+buffer = ["let foo = 42;"]
+cursor = [0, 4]
+goal = ["let x;"]
+solutions = ["c$x;<Esc>", "Cx;<Esc>"]
+[exercise.text.ru]
+task = "Замени весь хвост строки на «x;»."
+hint = "c$ или C — конец строки в изменение."
+[exercise.text.en]
+task = "Replace the rest of the line with 'x;'."
+hint = "c$ — or C for short."
+
+[[exercise]]
+buffer = ["один", "два"]
+cursor = [0, 2]
+goal = ["первый", "два"]
+solutions = ["ccпервый<Esc>", "Sпервый<Esc>"]
+[exercise.text.ru]
+task = "Замени первую строку целиком на «первый»."
+hint = "cc — строка целиком, как dd, но с переходом в insert."
+[exercise.text.en]
+task = "Replace the whole first line."
+hint = "cc is the whole line, like dd but into insert mode."

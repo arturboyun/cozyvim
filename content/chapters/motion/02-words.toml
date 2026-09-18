@@ -1,0 +1,83 @@
+id = "motion/words"
+chapter = "motion"
+order = 2
+
+[text.ru]
+title = "Слова: w b e"
+intro = """
+Символ за символом — медленно. Vim умеет прыгать словами: w в начало
+следующего слова, b в начало предыдущего, e в конец текущего.
+Заглавные W B E считают словом всё до пробела — знаки препинания не мешают.
+"""
+[text.en]
+title = "Words: w b e"
+intro = """
+Character by character is slow. Vim jumps by words: w to the next word start,
+b to the previous one, e to the end of the current word.
+Capital W B E treat everything up to a space as one word.
+"""
+
+[[exercise]]
+buffer = ["let foo = bar;"]
+cursor = [0, 0]
+goal = ["let foo = bar;"]
+goal_cursor = [0, 4]
+solutions = ["w"]
+[exercise.text.ru]
+task = "Прыгни на начало слова foo."
+hint = "w — в начало следующего слова."
+[exercise.text.en]
+task = "Jump to the start of foo."
+hint = "w goes to the next word start."
+
+[[exercise]]
+buffer = ["let foo = bar;"]
+cursor = [0, 0]
+goal = ["let foo = bar;"]
+goal_cursor = [0, 8]
+solutions = ["2w", "ww"]
+[exercise.text.ru]
+task = "Встань на знак равенства."
+hint = "Для vim = — тоже слово. Два прыжка: 2w."
+[exercise.text.en]
+task = "Land on the equals sign."
+hint = "To vim, = is a word too. Two jumps: 2w."
+
+[[exercise]]
+buffer = ["let foo = bar;"]
+cursor = [0, 0]
+goal = ["let foo = bar;"]
+goal_cursor = [0, 2]
+solutions = ["e"]
+[exercise.text.ru]
+task = "Встань на последнюю букву слова let."
+hint = "e — конец слова, а не начало следующего."
+[exercise.text.en]
+task = "Land on the last letter of let."
+hint = "e is the end of a word, not the start of the next."
+
+[[exercise]]
+buffer = ["let foo = bar;"]
+cursor = [0, 10]
+goal = ["let foo = bar;"]
+goal_cursor = [0, 4]
+solutions = ["2b", "bb"]
+[exercise.text.ru]
+task = "Вернись на начало слова foo."
+hint = "b идёт назад по началам слов."
+[exercise.text.en]
+task = "Go back to the start of foo."
+hint = "b walks back over word starts."
+
+[[exercise]]
+buffer = ["path/to/file.rs is long"]
+cursor = [0, 0]
+goal = ["path/to/file.rs is long"]
+goal_cursor = [0, 16]
+solutions = ["W", "7w"]
+[exercise.text.ru]
+task = "Прыгни на слово is одним нажатием."
+hint = "w споткнётся о каждый слэш и точку. W считает словом всё до пробела."
+[exercise.text.en]
+task = "Jump to is in a single keystroke."
+hint = "w stops at every slash and dot. W treats it all as one word."

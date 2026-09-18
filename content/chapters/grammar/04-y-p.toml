@@ -1,0 +1,66 @@
+id = "grammar/y-p"
+chapter = "grammar"
+order = 13
+
+[text.ru]
+title = "Копирование: y и p"
+intro = """
+y — «скопировать» (yank), и работает по той же грамматике: yw, y$, yy.
+p вставляет скопированное после курсора, P — перед. Удалённое тоже попадает
+в ту же копилку, поэтому ddp меняет строки местами.
+"""
+[text.en]
+title = "Copying: y and p"
+intro = """
+y yanks and follows the same grammar: yw, y$, yy.
+p puts after the cursor, P before. Deleted text lands in the same place,
+which is why ddp swaps two lines.
+"""
+
+[[exercise]]
+buffer = ["один", "два"]
+cursor = [0, 0]
+goal = ["один", "один", "два"]
+solutions = ["yyp"]
+[exercise.text.ru]
+task = "Продублируй первую строку."
+hint = "yy копирует строку, p вставляет её ниже."
+[exercise.text.en]
+task = "Duplicate the first line."
+hint = "yy copies, p puts it below."
+
+[[exercise]]
+buffer = ["foo bar"]
+cursor = [0, 0]
+goal = ["foo foo bar"]
+solutions = ["ywP"]
+[exercise.text.ru]
+task = "Продублируй слово foo вместе с пробелом."
+hint = "yw копирует слово с пробелом, P вставляет перед курсором."
+[exercise.text.en]
+task = "Duplicate the word foo with its space."
+hint = "yw copies, P puts before the cursor."
+
+[[exercise]]
+buffer = ["второй", "первый"]
+cursor = [0, 0]
+goal = ["первый", "второй"]
+solutions = ["ddp"]
+[exercise.text.ru]
+task = "Поменяй строки местами."
+hint = "Удалённая строка лежит в той же копилке — dd, потом p."
+[exercise.text.en]
+task = "Swap the two lines."
+hint = "The deleted line is still in the register — dd, then p."
+
+[[exercise]]
+buffer = ["let a = 1;", "let b = 2;"]
+cursor = [0, 0]
+goal = ["let a = 1;", "let b = 2;", "let a = 1;"]
+solutions = ["yyGp", "yyjp"]
+[exercise.text.ru]
+task = "Скопируй первую строку в конец файла."
+hint = "Сначала копия, потом переход в конец, потом вставка."
+[exercise.text.en]
+task = "Copy the first line to the end of the file."
+hint = "Yank, move, put."

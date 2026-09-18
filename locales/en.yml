@@ -1,0 +1,100 @@
+_version: 1
+
+app:
+  name: cozyvim
+  tagline: A cozy vim trainer
+
+nav:
+  map: Map
+  stats: Stats
+  settings: Settings
+  back: Back
+
+onboarding:
+  lang_title: Pick a language
+  lang_sub: Explanations use it. Vim commands stay as they are.
+  exp_title: How well do you know vim?
+  exp_sub: This picks where to start and how strictly to check.
+  exp_newcomer: Never used it
+  exp_newcomer_sub: We start with cursor motion, checking is gentle
+  exp_dabbler: Tried it, escape with :q!
+  exp_dabbler_sub: The first chapters will go fast
+  exp_confident: I use it daily
+  exp_confident_sub: Strict keystroke checking is on
+  mode_title: How should exercises be checked?
+  mode_sub: You can change this any time in settings.
+  ready_title: Ready
+  ready_sub: We start with cursor motion. The keyboard below shows where things are.
+  start: Start
+  next: Next
+
+mode:
+  mix: Mix
+  mix_sub: Any path to the goal counts, stars reward efficiency
+  strict: Strict
+  strict_sub: Only the exact keystroke sequence counts
+  free: Free
+  free_sub: Any path counts, the optimum is shown for reference
+
+map:
+  title: Chapters
+  locked: Unlocks after the previous chapter
+  coming_soon: Soon
+  lessons: "lessons: %{count}"
+  exercises: "exercises: %{count}"
+  progress: "%{done} of %{total}"
+
+lesson:
+  task: Task
+  hint: Hint
+  show_hint: Hint
+  reset: Reset
+  menu: Menu
+  keyboard: Keyboard
+  pressed: Pressed
+  exercise: "Exercise %{i} of %{n}"
+  optimal: "Optimum: %{keys} — %{n} keystrokes"
+  your_keys: "Your keystrokes: %{n}"
+  success: Done
+  failed: Not quite
+  expected: "Expected: %{keys}"
+  next: Next exercise
+  retry: Try again
+  finish: Finish lesson
+  done_title: Lesson complete
+  unsupported: The trainer doesn't support this command yet
+  mode_normal: NORMAL
+  mode_insert: INSERT
+  mode_visual: VISUAL
+  mode_vline: VISUAL LINE
+  goal: Goal
+  keyboard_hidden: Keyboard hidden — you're not looking at the keys any more
+
+stats:
+  title: Stats
+  stars: Stars
+  exercises: Exercises done
+  streak: Day streak
+  problems: Weak spots
+  problems_empty: No failures yet — keep it up
+  problems_hint: These commands trip you up most often
+  efficiency: Keystrokes vs optimum
+  efficiency_empty: Finish a couple of exercises and a chart appears here
+  activity: Activity by day
+  attempts: "attempts: %{n}"
+
+settings:
+  title: Settings
+  lang: Language
+  mode: Exercise checking
+  theme: Theme
+  theme_dark: Dark
+  theme_light: Light
+  keyboard: On-screen keyboard
+  keyboard_auto: Automatic
+  keyboard_always: Always
+  keyboard_never: Never
+  reset_progress: Reset progress
+  reset_confirm: Erase all progress?
+  reset_yes: Yes, erase
+  reset_no: Cancel

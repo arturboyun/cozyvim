@@ -1,0 +1,79 @@
+id = "grammar/counts"
+chapter = "grammar"
+order = 14
+
+[text.ru]
+title = "Счётчики"
+intro = """
+Число перед командой повторяет её: 3dd, d3w, 2cw. Ставить число можно и перед
+оператором, и перед движением — d2w и 2dw делают одно и то же.
+
+Не гонись за большими числами: считать десять слов глазами дольше, чем нажать
+dw дважды. Счётчик хорош там, где количество видно сразу.
+"""
+[text.en]
+title = "Counts"
+intro = """
+A number repeats the command: 3dd, d3w, 2cw. It can go before the operator or
+before the motion — d2w and 2dw are the same.
+"""
+
+[[exercise]]
+buffer = ["a b c d e"]
+cursor = [0, 0]
+goal = ["d e"]
+solutions = ["d3w", "3dw"]
+[exercise.text.ru]
+task = "Удали первые три слова."
+hint = "Счётчик можно поставить как перед d, так и перед w."
+[exercise.text.en]
+task = "Delete the first three words."
+hint = "The count goes before d or before w."
+
+[[exercise]]
+buffer = ["alpha beta gamma delta"]
+cursor = [0, 6]
+goal = ["alpha delta"]
+solutions = ["d2w", "2dw"]
+[exercise.text.ru]
+task = "Удали beta и gamma, оставив alpha и delta."
+hint = "Два слова — значит счётчик два."
+[exercise.text.en]
+task = "Delete beta and gamma."
+hint = "Two words, so the count is two."
+
+[[exercise]]
+buffer = ["один", "два", "три", "четыре", "пять"]
+cursor = [1, 0]
+goal = ["один", "пять"]
+solutions = ["3dd"]
+[exercise.text.ru]
+task = "Удали три строки посередине."
+hint = "3dd — три строки вниз от текущей."
+[exercise.text.en]
+task = "Delete the three middle lines."
+hint = "3dd deletes three lines from the current one."
+
+[[exercise]]
+buffer = ["x x x x x"]
+cursor = [0, 0]
+goal = ["x x"]
+solutions = ["3dw", "d3w"]
+[exercise.text.ru]
+task = "Оставь только два последних x."
+hint = "Считай слова, а не символы."
+[exercise.text.en]
+task = "Leave only the last two x's."
+hint = "Count words, not characters."
+
+[[exercise]]
+buffer = ["fn main() {", "    a();", "    b();", "    c();", "}"]
+cursor = [1, 4]
+goal = ["fn main() {", "}"]
+solutions = ["3dd", "d2j"]
+[exercise.text.ru]
+task = "Очисти тело функции."
+hint = "Три строки подряд — один счётчик."
+[exercise.text.en]
+task = "Empty the function body."
+hint = "Three lines in a row, one count."

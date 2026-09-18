@@ -1,0 +1,66 @@
+id = "insert/i-a"
+chapter = "insert"
+order = 6
+
+[text.ru]
+title = "i и a"
+intro = """
+i ставит курсор перед текущим символом, a — после него. Дальше ты просто
+печатаешь. Esc возвращает в нормальный режим, где буквы снова команды.
+Правило, которое экономит нервы: живи в нормальном режиме, входи в insert
+на одно короткое дело и сразу выходи.
+"""
+[text.en]
+title = "i and a"
+intro = """
+i puts the cursor before the current character, a after it. Then you just type.
+Esc returns to normal mode, where letters are commands again.
+"""
+
+[[exercise]]
+buffer = ["bar"]
+cursor = [0, 0]
+goal = ["foobar"]
+solutions = ["ifoo<Esc>"]
+[exercise.text.ru]
+task = "Допиши foo перед bar."
+hint = "i — вставка перед курсором, потом текст, потом Esc."
+[exercise.text.en]
+task = "Add foo before bar."
+hint = "i inserts before the cursor, then type, then Esc."
+
+[[exercise]]
+buffer = ["fo"]
+cursor = [0, 1]
+goal = ["foo"]
+solutions = ["ao<Esc>"]
+[exercise.text.ru]
+task = "Добавь ещё одну o в конец."
+hint = "Курсор на последней букве — значит нужна вставка после неё, a."
+[exercise.text.en]
+task = "Add one more o at the end."
+hint = "The cursor is on the last letter, so insert after it with a."
+
+[[exercise]]
+buffer = ["let x = 1"]
+cursor = [0, 8]
+goal = ["let x = 12"]
+solutions = ["a2<Esc>"]
+[exercise.text.ru]
+task = "Преврати 1 в 12."
+hint = "a печатает сразу после символа под курсором."
+[exercise.text.en]
+task = "Turn 1 into 12."
+hint = "a types right after the character under the cursor."
+
+[[exercise]]
+buffer = ["cozy"]
+cursor = [0, 2]
+goal = ["cozzy"]
+solutions = ["iz<Esc>", "az<Esc>"]
+[exercise.text.ru]
+task = "Удвой букву z."
+hint = "Здесь годятся оба способа — и до символа, и после."
+[exercise.text.en]
+task = "Double the letter z."
+hint = "Both ways work here — before or after the character."

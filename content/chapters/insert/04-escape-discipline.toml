@@ -1,0 +1,66 @@
+id = "insert/escape-discipline"
+chapter = "insert"
+order = 9
+
+[text.ru]
+title = "Дисциплина Esc"
+intro = """
+Главная ошибка новичка — оставаться в режиме вставки и править текст
+стрелками и Backspace. Это обычный редактор, и vim в нём бесполезен.
+Привычка звучит так: вошёл, напечатал одно дело, Esc. Теперь снова доступны
+все команды — и следующее движение стоит одно нажатие.
+"""
+[text.en]
+title = "Escape discipline"
+intro = """
+The beginner's mistake is to stay in insert mode and fix text with arrows and
+Backspace. Get in, type one thing, Esc.
+"""
+
+[[exercise]]
+buffer = ["let x = "]
+cursor = [0, 7]
+goal = ["let x = 42;"]
+solutions = ["a42;<Esc>"]
+[exercise.text.ru]
+task = "Допиши значение: 42;"
+hint = "Одна вставка — одно дело — Esc."
+[exercise.text.en]
+task = "Finish the line with 42;"
+hint = "One insert, one job, Esc."
+
+[[exercise]]
+buffer = ["fn main() {", "}"]
+cursor = [0, 0]
+goal = ["fn main() {", "    println!();", "}"]
+solutions = ["o    println!();<Esc>"]
+[exercise.text.ru]
+task = "Добавь вызов println!(); внутрь функции."
+hint = "Открыть строку и сразу напечатать — это одно движение o."
+[exercise.text.en]
+task = "Add a println!(); call inside the function."
+hint = "Opening the line and typing is a single o."
+
+[[exercise]]
+buffer = ["привет", "мир"]
+cursor = [1, 0]
+goal = ["привет", "добрый", "мир"]
+solutions = ["Oдобрый<Esc>", "koдобрый<Esc>"]
+[exercise.text.ru]
+task = "Вставь строку «добрый» между двумя существующими."
+hint = "Можно открыть строку над текущей — или подняться и открыть под ней."
+[exercise.text.en]
+task = "Insert a line between the two."
+hint = "Open above the current line, or move up and open below it."
+
+[[exercise]]
+buffer = ["fn a() {}", "fn c() {}"]
+cursor = [0, 0]
+goal = ["fn a() {}", "fn b() {}", "fn c() {}"]
+solutions = ["ofn b() {}<Esc>"]
+[exercise.text.ru]
+task = "Добавь недостающую функцию b между a и c."
+hint = "Одно o, одна строка, Esc."
+[exercise.text.en]
+task = "Add the missing function b."
+hint = "One o, one line, Esc."

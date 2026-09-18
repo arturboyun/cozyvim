@@ -1,0 +1,67 @@
+id = "insert/I-A"
+chapter = "insert"
+order = 7
+
+[text.ru]
+title = "I и A"
+intro = """
+Заглавные версии — это «движение плюс вставка» одним нажатием.
+I = ^ и затем i: печатать с начала кода, минуя отступ.
+A = $ и затем a: дописать в конец строки, где бы курсор ни стоял.
+Точка с запятой в конце строки ставится через A, а не через $ и a.
+"""
+[text.en]
+title = "I and A"
+intro = """
+The capitals bundle a motion with the insert.
+I = ^ then i: type at the start of the code, past the indent.
+A = $ then a: append at the end of the line, wherever the cursor is.
+"""
+
+[[exercise]]
+buffer = ["    let x = 1"]
+cursor = [0, 10]
+goal = ["    let x = 1;"]
+solutions = ["A;<Esc>"]
+[exercise.text.ru]
+task = "Поставь точку с запятой в конце строки."
+hint = "A — сразу в конец строки и в режим вставки."
+[exercise.text.en]
+task = "Add a semicolon at the end of the line."
+hint = "A goes to the end of the line and starts inserting."
+
+[[exercise]]
+buffer = ["    x = 1;"]
+cursor = [0, 8]
+goal = ["    let x = 1;"]
+solutions = ["Ilet <Esc>"]
+[exercise.text.ru]
+task = "Добавь let перед x, не трогая отступ."
+hint = "I встаёт на первый непробельный символ — отступ останется цел."
+[exercise.text.en]
+task = "Add let before x without touching the indent."
+hint = "I lands on the first non-blank character."
+
+[[exercise]]
+buffer = ['    println!("привет")']
+cursor = [0, 6]
+goal = ['    println!("привет");']
+solutions = ["A;<Esc>"]
+[exercise.text.ru]
+task = "Заверши строку точкой с запятой."
+hint = "Длина строки не важна: A всегда попадает в конец."
+[exercise.text.en]
+task = "Finish the line with a semicolon."
+hint = "Line length doesn't matter: A always lands at the end."
+
+[[exercise]]
+buffer = ["        deep = true"]
+cursor = [0, 15]
+goal = ["        # deep = true"]
+solutions = ["I# <Esc>"]
+[exercise.text.ru]
+task = "Закомментируй строку, добавив «# » перед кодом."
+hint = "Комментарий начинается после отступа — это работа для I."
+[exercise.text.en]
+task = "Comment the line out by adding '# ' before the code."
+hint = "The comment goes after the indent — that's I."

@@ -1,0 +1,82 @@
+id = "grammar/d-motion"
+chapter = "grammar"
+order = 10
+
+[text.ru]
+title = "d + движение"
+intro = """
+Вот то, ради чего всё затевалось. В vim нет двухсот команд — есть грамматика:
+оператор плюс движение. d — «удалить», а что именно удалить, говорит движение,
+то самое, которое ты уже выучил в первой главе.
+
+dw — удалить до начала следующего слова. de — до конца слова. d$ — до конца
+строки. d0 — до начала. Выучив новое движение, ты бесплатно получаешь новую
+команду удаления. И то же самое произойдёт с c и y.
+"""
+[text.en]
+title = "d + motion"
+intro = """
+This is the whole point. Vim isn't two hundred commands, it's a grammar:
+operator plus motion. d means delete; the motion says how far.
+Every motion you learn becomes a new delete command for free.
+"""
+
+[[exercise]]
+buffer = ["let foo = 42;"]
+cursor = [0, 4]
+goal = ["let = 42;"]
+solutions = ["dw"]
+[exercise.text.ru]
+task = "Удали слово foo вместе с пробелом после него."
+hint = "d — оператор, w — движение до начала следующего слова."
+[exercise.text.en]
+task = "Delete the word foo along with the space after it."
+hint = "d is the operator, w the motion."
+
+[[exercise]]
+buffer = ["let foo = 42;"]
+cursor = [0, 4]
+goal = ["let  = 42;"]
+solutions = ["de"]
+[exercise.text.ru]
+task = "Удали только слово foo, пробел оставь."
+hint = "e доходит до конца слова и не трогает пробел за ним."
+[exercise.text.en]
+task = "Delete just foo, keeping the space."
+hint = "e stops at the end of the word."
+
+[[exercise]]
+buffer = ["let foo = 42;"]
+cursor = [0, 4]
+goal = ["let "]
+solutions = ["d$", "D"]
+[exercise.text.ru]
+task = "Удали всё от курсора до конца строки."
+hint = "d$ — оператор плюс движение. D — то же самое одной клавишей."
+[exercise.text.en]
+task = "Delete from the cursor to the end of the line."
+hint = "d$ — or D, which is the same thing in one key."
+
+[[exercise]]
+buffer = ["hello world"]
+cursor = [0, 6]
+goal = ["world"]
+solutions = ["d0"]
+[exercise.text.ru]
+task = "Удали всё, что слева от курсора."
+hint = "Движение может идти назад — грамматика от этого не ломается."
+[exercise.text.en]
+task = "Delete everything to the left of the cursor."
+hint = "Motions can go backwards; the grammar still holds."
+
+[[exercise]]
+buffer = ["fn a(x, y) {}"]
+cursor = [0, 5]
+goal = ["fn a() {}"]
+solutions = ["d4l", "dt)"]
+[exercise.text.ru]
+task = "Очисти список аргументов, не тронув скобки."
+hint = "Посчитай символы и используй счётчик с движением: d4l."
+[exercise.text.en]
+task = "Clear the argument list without touching the parentheses."
+hint = "Count the characters and use a count with the motion: d4l."

@@ -1,0 +1,87 @@
+# Порядок глав несёт смысл: главы 1–2 — разогрев, глава 3 — та самая
+# грамматика, ради которой всё затевалось.
+
+[[chapter]]
+id = "motion"
+order = 1
+[chapter.text.ru]
+title = "Движение"
+subtitle = "Курсор без стрелок"
+[chapter.text.en]
+title = "Motion"
+subtitle = "Moving without arrow keys"
+
+[[chapter]]
+id = "insert"
+order = 2
+[chapter.text.ru]
+title = "Вставка"
+subtitle = "Как войти в текст и выйти из него"
+[chapter.text.en]
+title = "Insert"
+subtitle = "Getting into the text and back out"
+
+[[chapter]]
+id = "grammar"
+order = 3
+[chapter.text.ru]
+title = "Грамматика"
+subtitle = "Оператор + движение = любая команда"
+[chapter.text.en]
+title = "Grammar"
+subtitle = "Operator + motion = any command"
+
+[[chapter]]
+id = "textobj"
+order = 4
+coming_soon = true
+[chapter.text.ru]
+title = "Текстовые объекты"
+subtitle = "Слово, кавычки, скобки, абзац"
+[chapter.text.en]
+title = "Text objects"
+subtitle = "Words, quotes, brackets, paragraphs"
+
+[[chapter]]
+id = "search"
+order = 5
+coming_soon = true
+[chapter.text.ru]
+title = "Поиск и прыжки"
+subtitle = "f, t, /, n — попасть точно"
+[chapter.text.en]
+title = "Search and jumps"
+subtitle = "f, t, /, n — land exactly"
+
+[[chapter]]
+id = "registers"
+order = 6
+coming_soon = true
+[chapter.text.ru]
+title = "Отмена и регистры"
+subtitle = "u, точка, копилка текста"
+[chapter.text.en]
+title = "Undo and registers"
+subtitle = "u, the dot, and where text is kept"
+
+[[chapter]]
+id = "visual"
+order = 7
+coming_soon = true
+[chapter.text.ru]
+title = "Визуальный режим"
+subtitle = "Когда нужно увидеть выделение"
+[chapter.text.en]
+title = "Visual mode"
+subtitle = "When you need to see the selection"
+
+[[chapter]]
+id = "mastery"
+order = 8
+coming_soon = true
+[chapter.text.ru]
+title = "Мастерство"
+subtitle = "Точка, метки, макросы"
+[chapter.text.en]
+title = "Mastery"
+subtitle = "The dot, marks, macros"

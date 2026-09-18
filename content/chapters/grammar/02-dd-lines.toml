@@ -1,0 +1,65 @@
+id = "grammar/dd-lines"
+chapter = "grammar"
+order = 11
+
+[text.ru]
+title = "Целые строки: dd"
+intro = """
+Удвоенный оператор действует на строку целиком: dd удаляет строку, cc меняет,
+yy копирует. Это не исключение из грамматики, а её сокращение — «оператор сам
+себе движение» означает «вся строка».
+"""
+[text.en]
+title = "Whole lines: dd"
+intro = """
+A doubled operator acts on the whole line: dd deletes, cc changes, yy yanks.
+The operator repeated is shorthand for "this line".
+"""
+
+[[exercise]]
+buffer = ["один", "два", "три"]
+cursor = [1, 0]
+goal = ["один", "три"]
+solutions = ["dd"]
+[exercise.text.ru]
+task = "Удали среднюю строку."
+hint = "dd — вся строка, где бы в ней ни стоял курсор."
+[exercise.text.en]
+task = "Delete the middle line."
+hint = "dd removes the whole line."
+
+[[exercise]]
+buffer = ["один", "два", "три"]
+cursor = [0, 0]
+goal = ["три"]
+solutions = ["2dd", "dj"]
+[exercise.text.ru]
+task = "Удали две первые строки."
+hint = "Счётчик перед оператором: 2dd. Или d с движением j."
+[exercise.text.en]
+task = "Delete the first two lines."
+hint = "A count before the operator: 2dd. Or d with the motion j."
+
+[[exercise]]
+buffer = ["a", "b", "c", "d"]
+cursor = [1, 0]
+goal = ["a"]
+solutions = ["dG", "3dd"]
+[exercise.text.ru]
+task = "Удали всё от второй строки до конца файла."
+hint = "G — движение до конца файла, значит dG удаляет до конца."
+[exercise.text.en]
+task = "Delete from line two to the end of the file."
+hint = "G is a motion, so dG deletes to the end."
+
+[[exercise]]
+buffer = ["fn a() {", "    отладка", "    дело", "}"]
+cursor = [1, 4]
+goal = ["fn a() {", "    дело", "}"]
+solutions = ["dd"]
+[exercise.text.ru]
+task = "Убери отладочную строку из функции."
+hint = "Столбец курсора не важен — dd берёт строку целиком."
+[exercise.text.en]
+task = "Remove the debug line from the function."
+hint = "The column doesn't matter."

@@ -1,0 +1,65 @@
+id = "insert/o-O"
+chapter = "insert"
+order = 8
+
+[text.ru]
+title = "o и O"
+intro = """
+o открывает новую строку под текущей, O — над ней, и обе сразу переводят в
+режим вставки. Отступ текущей строки копируется, поэтому в коде новая строка
+появляется ровно там, где надо.
+"""
+[text.en]
+title = "o and O"
+intro = """
+o opens a line below the current one, O above it, and both drop you into
+insert mode. The current indent is carried over.
+"""
+
+[[exercise]]
+buffer = ["fn main() {", "}"]
+cursor = [0, 0]
+goal = ["fn main() {", "    hi", "}"]
+solutions = ["o    hi<Esc>"]
+[exercise.text.ru]
+task = "Добавь строку «    hi» внутрь функции."
+hint = "o открывает строку ниже текущей."
+[exercise.text.en]
+task = "Add a line '    hi' inside the function."
+hint = "o opens a line below."
+
+[[exercise]]
+buffer = ["    second"]
+cursor = [0, 4]
+goal = ["    first", "    second"]
+solutions = ["Ofirst<Esc>"]
+[exercise.text.ru]
+task = "Добавь строку «    first» над текущей."
+hint = "O открывает строку выше и повторяет отступ — печатать пробелы не нужно."
+[exercise.text.en]
+task = "Add '    first' above the current line."
+hint = "O opens a line above and copies the indent."
+
+[[exercise]]
+buffer = ["let a = 1;"]
+cursor = [0, 3]
+goal = ["let a = 1;", "let b = 2;"]
+solutions = ["olet b = 2;<Esc>"]
+[exercise.text.ru]
+task = "Добавь вторую строку: let b = 2;"
+hint = "Неважно, где курсор в строке — o работает от строки, не от столбца."
+[exercise.text.en]
+task = "Add a second line: let b = 2;"
+hint = "The column doesn't matter — o works on lines."
+
+[[exercise]]
+buffer = ["один", "три"]
+cursor = [0, 0]
+goal = ["один", "два", "три"]
+solutions = ["oдва<Esc>"]
+[exercise.text.ru]
+task = "Вставь пропущенное «два» между строками."
+hint = "Встань на строку выше пропуска и открой строку под ней."
+[exercise.text.en]
+task = "Insert the missing line between the two."
+hint = "Stand on the line above the gap and open a line below it."

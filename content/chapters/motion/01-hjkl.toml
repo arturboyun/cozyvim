@@ -1,0 +1,71 @@
+id = "motion/hjkl"
+chapter = "motion"
+order = 1
+
+[text.ru]
+title = "h j k l"
+intro = """
+Четыре клавиши под правой рукой: h — влево, l — вправо, j — вниз, k — вверх.
+Не тянись к стрелкам: смысл не в экономии сантиметров, а в том, что пальцы
+остаются на домашнем ряду и следующая команда начинается мгновенно.
+Подсказка: j похожа на стрелку вниз, а h и l стоят там же, где влево и вправо.
+"""
+[text.en]
+title = "h j k l"
+intro = """
+Four keys under your right hand: h left, l right, j down, k up.
+Don't reach for the arrows — the point isn't the distance, it's that your
+fingers stay on the home row and the next command starts instantly.
+"""
+
+[[exercise]]
+buffer = ["cozy"]
+cursor = [0, 0]
+goal = ["cozy"]
+goal_cursor = [0, 3]
+solutions = ["3l", "lll"]
+[exercise.text.ru]
+task = "Поставь курсор на последнюю букву — на y."
+hint = "l двигает вправо. Перед командой можно назвать число: 3l."
+[exercise.text.en]
+task = "Put the cursor on the last letter, y."
+hint = "l moves right. A command can take a count: 3l."
+
+[[exercise]]
+buffer = ["один", "два", "три"]
+cursor = [0, 0]
+goal = ["один", "два", "три"]
+goal_cursor = [2, 0]
+solutions = ["2j", "jj"]
+[exercise.text.ru]
+task = "Спустись на третью строку."
+hint = "j — вниз. Две строки вниз: 2j."
+[exercise.text.en]
+task = "Go down to the third line."
+hint = "j moves down. Two lines down: 2j."
+
+[[exercise]]
+buffer = ["a b c", "d e f", "g h i"]
+cursor = [0, 0]
+goal = ["a b c", "d e f", "g h i"]
+goal_cursor = [2, 4]
+solutions = ["2j4l", "jjllll"]
+[exercise.text.ru]
+task = "Дойди до буквы i в правом нижнем углу."
+hint = "Считай шаги заранее: две строки вниз, четыре столбца вправо."
+[exercise.text.en]
+task = "Reach the letter i in the bottom right corner."
+hint = "Count first: two lines down, four columns right."
+
+[[exercise]]
+buffer = ["a b c", "d e f", "g h i"]
+cursor = [2, 4]
+goal = ["a b c", "d e f", "g h i"]
+goal_cursor = [0, 0]
+solutions = ["2k4h", "kkhhhh"]
+[exercise.text.ru]
+task = "Вернись в самое начало — на букву a."
+hint = "k — вверх, h — влево."
+[exercise.text.en]
+task = "Go back to the very start, the letter a."
+hint = "k is up, h is left."
