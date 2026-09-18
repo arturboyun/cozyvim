@@ -6,7 +6,28 @@
 
 ![Preview Image](./assets/images/preview.png)
 
+## Установка
+
+Готовые сборки под Linux, macOS и Windows — на [странице релизов][releases].
+Уроки вшиты в бинарь, рядом с ним ничего не нужно.
+
+[releases]: https://github.com/arturboyun/cozyvim/releases/latest
+
+На Windows при первом запуске появится синее окно «Windows protected your PC»:
+бинарь не подписан, и SmartScreen блокирует любой незнакомый `.exe`. Нажми
+**More info** → **Run anyway**. Если кнопки нет, сними с файла метку «скачано
+из интернета»: правый клик → Свойства → галочка **Unblock**, или в PowerShell
+
+```powershell
+Unblock-File .\cozyvim.exe
+```
+
+Подписи не будет, пока проект не обзаведётся сертификатом, — предупреждение
+честное, а не ложная тревога антивируса.
+
 ## Запуск
+
+Из исходников:
 
 ```bash
 cargo run --release
