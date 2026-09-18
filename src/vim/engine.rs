@@ -15,6 +15,13 @@ pub enum Mode {
     Insert,
     Visual,
     VisualLine,
+    VisualBlock,
+}
+
+impl Mode {
+    pub fn is_visual(self) -> bool {
+        matches!(self, Mode::Visual | Mode::VisualLine | Mode::VisualBlock)
+    }
 }
 
 #[derive(Clone, Debug, PartialEq)]
@@ -48,13 +55,19 @@ enum MotionKind {
     Find { ch: char, forward: bool, till: bool },
     RepeatFind { reverse: bool },
     SearchNext { reverse: bool },
+    /// `'a` — на строку метки, `` `a `` — точно в её позицию.
+    Mark { reg: char, exact: bool },
 }
 
 impl MotionKind {
     fn linewise(&self) -> bool {
         matches!(
             self,
-            MotionKind::Down | MotionKind::Up | MotionKind::GotoLine | MotionKind::FileEnd
+            MotionKind::Down
+                | MotionKind::Up
+                | MotionKind::GotoLine
+                | MotionKind::FileEnd
+                | MotionKind::Mark { exact: false, .. }
         )
     }
 
@@ -85,12 +98,37 @@ enum Target {
     Selection,
 }
 
+/// Какого сорта выделение заводит v, V или Ctrl-v.
+#[derive(Clone, Copy, PartialEq, Eq, Debug)]
+enum VisualKind {
+    Char,
+    Line,
+    Block,
+}
+
+impl VisualKind {
+    fn mode(self) -> Mode {
+        match self {
+            VisualKind::Char => Mode::Visual,
+            VisualKind::Line => Mode::VisualLine,
+            VisualKind::Block => Mode::VisualBlock,
+        }
+    }
+}
+
 #[derive(Clone, Debug)]
 enum Cmd {
     Move(MotionKind, usize),
     Op { op: char, target: Target, reg: Option<char> },
     Insert(InsertKind),
-    EnterVisual { linewise: bool },
+    EnterVisual(VisualKind),
+    /// Вставка по всей высоте блока: I слева от него, A справа.
+    BlockInsert { append: bool },
+    SetMark(char),
+    RecordStart(char),
+    RecordStop,
+    PlayMacro { reg: Option<char>, count: usize },
+    StartEx,
     DelChar { before: bool, count: usize, reg: Option<char> },
     ToEol { op: char, reg: Option<char> },
     SubstChar { count: usize, reg: Option<char> },
@@ -117,6 +155,26 @@ enum Parse {
 struct Register {
     lines: Vec<Vec<char>>,
     linewise: bool,
+    /// Прямоугольный кусок: вставляется столбцом, а не сплошным текстом.
+    blockwise: bool,
+}
+
+/// Командная строка внизу экрана: префикс определяет, что произойдёт по Enter.
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct CmdLine {
+    pub prefix: char,
+    pub text: String,
+}
+
+/// Вставка, размноженная по строкам блока: ждёт Esc, чтобы повторить
+/// напечатанное на остальных строках.
+#[derive(Clone, Debug)]
+struct BlockInsert {
+    rows: Vec<usize>,
+    col: usize,
+    /// A в конце строк неровной длины дописывает, дополняя пробелами.
+    append: bool,
+    typed: Vec<char>,
 }
 
 #[derive(Clone)]
@@ -135,12 +193,20 @@ pub struct Engine {
     visual_anchor: Pos,
     last_find: Option<(char, bool, bool)>,
     pub last_search: Option<(String, bool)>,
-    /// Активная строка поиска: (введённое, вперёд).
-    pub cmdline: Option<(String, bool)>,
+    /// Активная командная строка: `/`, `?` или `:` вместе с набранным текстом.
+    pub cmdline: Option<CmdLine>,
     /// Последнее изменение в нотации клавиш — для команды `.`.
     last_change: Vec<Key>,
     recording: Option<Vec<Key>>,
     replaying: bool,
+    /// Метки `m{a-z}`. Позиция запоминается как есть; если текст под ней
+    /// уехал, при использовании метка ужимается в границы буфера.
+    marks: HashMap<char, Pos>,
+    macros: HashMap<char, Vec<Key>>,
+    /// Идёт запись `q{a-z}`: куда пишем и что уже записали.
+    macro_recording: Option<(char, Vec<Key>)>,
+    last_macro: Option<char>,
+    block_insert: Option<BlockInsert>,
     /// Диапазон последнего изменения буфера — для подсветки «что изменилось».
     pub last_touched: Option<(usize, usize)>,
 }
@@ -161,6 +227,11 @@ impl Engine {
             last_change: Vec::new(),
             recording: None,
             replaying: false,
+            marks: HashMap::new(),
+            macros: HashMap::new(),
+            macro_recording: None,
+            last_macro: None,
+            block_insert: None,
             last_touched: None,
         }
     }
@@ -169,20 +240,45 @@ impl Engine {
         &self.pending
     }
 
+    /// Регистр, в который сейчас пишется макрос — чтобы показать это в UI.
+    pub fn recording_macro(&self) -> Option<char> {
+        self.macro_recording.as_ref().map(|(reg, _)| *reg)
+    }
+
     pub fn visual_range(&self) -> Option<(Pos, Pos)> {
         match self.mode {
             Mode::Visual | Mode::VisualLine => {
                 let (a, b) = (self.visual_anchor, self.buf.cursor);
                 Some(if a <= b { (a, b) } else { (b, a) })
             }
+            // У блока углы считаются по строкам и столбцам независимо.
+            Mode::VisualBlock => Some(self.block_corners()),
             _ => None,
         }
+    }
+
+    fn block_corners(&self) -> (Pos, Pos) {
+        let (a, b) = (self.visual_anchor, self.buf.cursor);
+        let (top, bot) = (a.0.min(b.0), a.0.max(b.0));
+        let (left, right) = (a.1.min(b.1), a.1.max(b.1));
+        ((top, left), (bot, right))
     }
 
     /// Главная точка входа: одно нажатие клавиши.
     pub fn feed(&mut self, key: Key) -> StepResult {
         if let Some(rec) = self.recording.as_mut() {
             rec.push(key);
+        }
+        // `q`, закрывающая запись, в сам макрос попасть не должна.
+        let closing_q = self.macro_recording.is_some()
+            && key == Key::Char('q')
+            && self.mode == Mode::Normal
+            && self.pending.is_empty()
+            && self.cmdline.is_none();
+        if !closing_q {
+            if let Some((_, keys)) = self.macro_recording.as_mut() {
+                keys.push(key);
+            }
         }
         let result = self.feed_inner(key);
         if let StepResult::Unsupported(_) = result {
@@ -202,7 +298,7 @@ impl Engine {
     }
 
     fn feed_cmdline(&mut self, key: Key) -> StepResult {
-        let (mut text, forward) = self.cmdline.clone().unwrap();
+        let mut line = self.cmdline.clone().unwrap();
         match key {
             Key::Esc => {
                 self.cmdline = None;
@@ -210,30 +306,132 @@ impl Engine {
             }
             Key::Enter => {
                 self.cmdline = None;
-                if !text.is_empty() {
-                    self.last_search = Some((text.clone(), forward));
+                if line.prefix == ':' {
+                    return self.run_ex(&line.text.clone());
+                }
+                if !line.text.is_empty() {
+                    self.last_search = Some((line.text.clone(), line.prefix == '/'));
                 }
                 // Идём в сторону самого поиска: `?` ищет назад, а не наоборот.
                 self.do_search(true, 1);
                 StepResult::Consumed
             }
             Key::Backspace => {
-                text.pop();
-                self.cmdline = Some((text, forward));
+                line.text.pop();
+                self.cmdline = Some(line);
                 StepResult::Pending
             }
             Key::Char(c) => {
-                text.push(c);
-                self.cmdline = Some((text, forward));
+                line.text.push(c);
+                self.cmdline = Some(line);
                 StepResult::Pending
             }
             _ => StepResult::Ignored,
         }
     }
 
+    /// `:`-команды. Тренажёр понимает то, что меняет буфер или курсор;
+    /// :w и :q принимает молча, чтобы рефлекс не ломал упражнение.
+    fn run_ex(&mut self, cmd: &str) -> StepResult {
+        let cmd = cmd.trim();
+        if cmd.is_empty() {
+            return StepResult::Consumed;
+        }
+        if matches!(cmd, "w" | "w!" | "q" | "q!" | "wq" | "wq!" | "x" | "xa" | "wa" | "qa" | "qa!") {
+            return StepResult::Consumed;
+        }
+        if let Ok(n) = cmd.parse::<usize>() {
+            let row = n.clamp(1, self.buf.line_count()) - 1;
+            self.buf.cursor = (row, self.buf.first_non_blank(row));
+            return StepResult::Consumed;
+        }
+        if cmd == "$" {
+            let row = self.buf.line_count() - 1;
+            self.buf.cursor = (row, self.buf.first_non_blank(row));
+            return StepResult::Consumed;
+        }
+        match cmd {
+            "d" | "delete" => {
+                self.push_undo();
+                let row = self.buf.cursor.0;
+                let text = vec![self.buf.line(row).to_vec()];
+                self.store_register(None, text, true, false);
+                self.delete_range((row, 0), (row, 0), true, false);
+                self.last_touched = Some((row, row));
+                return StepResult::Consumed;
+            }
+            "y" | "yank" => {
+                let row = self.buf.cursor.0;
+                let text = vec![self.buf.line(row).to_vec()];
+                self.store_register(None, text, true, false);
+                return StepResult::Consumed;
+            }
+            _ => {}
+        }
+        let (all, rest) = match cmd.strip_prefix('%') {
+            Some(rest) => (true, rest),
+            None => (false, cmd),
+        };
+        if let Some(args) = rest.strip_prefix('s') {
+            return self.run_substitute(all, args);
+        }
+        StepResult::Unsupported("ex_command".into())
+    }
+
+    /// `:s/что/на что/[g]`. Разделитель — первый символ после s, как в vim.
+    fn run_substitute(&mut self, all_lines: bool, args: &str) -> StepResult {
+        let mut chars = args.chars();
+        let Some(sep) = chars.next() else {
+            return StepResult::Unsupported("ex_command".into());
+        };
+        if sep.is_alphanumeric() {
+            return StepResult::Unsupported("ex_command".into());
+        }
+        let parts: Vec<&str> = args[sep.len_utf8()..].split(sep).collect();
+        if parts.len() < 2 {
+            return StepResult::Unsupported("ex_command".into());
+        }
+        let (pattern, replacement) = (parts[0], parts[1]);
+        if pattern.is_empty() {
+            return StepResult::Unsupported("ex_command".into());
+        }
+        let global = parts.get(2).map(|f| f.contains('g')).unwrap_or(false);
+        let rows: Vec<usize> =
+            if all_lines { (0..self.buf.line_count()).collect() } else { vec![self.buf.cursor.0] };
+
+        self.push_undo();
+        let mut touched: Option<(usize, usize)> = None;
+        for row in rows {
+            let line: String = self.buf.line(row).iter().collect();
+            if !line.contains(pattern) {
+                continue;
+            }
+            let replaced =
+                if global { line.replace(pattern, replacement) } else { line.replacen(pattern, replacement, 1) };
+            self.buf.set_line(row, replaced.chars().collect());
+            touched = Some(match touched {
+                None => (row, row),
+                Some((from, _)) => (from, row),
+            });
+        }
+        match touched {
+            None => {
+                self.undo.pop();
+                StepResult::Unsupported("pattern_not_found".into())
+            }
+            Some((from, to)) => {
+                self.last_touched = Some((from, to));
+                self.buf.cursor = (to, self.buf.first_non_blank(to));
+                self.buf.clamp_cursor(false);
+                StepResult::Consumed
+            }
+        }
+    }
+
     fn feed_insert(&mut self, key: Key) -> StepResult {
         match key {
             Key::Esc => {
+                self.apply_block_insert();
                 self.mode = Mode::Normal;
                 if self.buf.cursor.1 > 0 {
                     self.buf.cursor.1 -= 1;
@@ -249,9 +447,14 @@ impl Engine {
                 line.insert(col, c);
                 self.buf.cursor = (row, col + 1);
                 self.last_touched = Some((row, row));
+                if let Some(block) = self.block_insert.as_mut() {
+                    block.typed.push(c);
+                }
                 StepResult::Consumed
             }
             Key::Enter => {
+                // Перевод строки ломает прямоугольник — дальше это обычная вставка.
+                self.block_insert = None;
                 let (row, col) = self.buf.cursor;
                 let line = self.buf.line(row).to_vec();
                 let col = col.min(line.len());
@@ -265,6 +468,7 @@ impl Engine {
                 StepResult::Consumed
             }
             Key::Backspace => {
+                self.block_insert = None;
                 let (row, col) = self.buf.cursor;
                 if col > 0 {
                     self.buf.line_mut(row).remove(col - 1);
@@ -331,7 +535,7 @@ impl Engine {
             Some(k) => *k,
         };
 
-        if self.mode == Mode::Visual || self.mode == Mode::VisualLine {
+        if self.mode.is_visual() {
             if let Some(cmd) = self.parse_visual_command(key, reg) {
                 return Parse::Done(cmd, i + 1);
             }
@@ -350,7 +554,7 @@ impl Engine {
             Key::Ctrl(c) => {
                 return match c {
                     'r' => Parse::Done(Cmd::Redo(count1.unwrap_or(1)), i + 1),
-                    'v' => Parse::Unsupported("visual_block".into()),
+                    'v' => Parse::Done(Cmd::EnterVisual(VisualKind::Block), i + 1),
                     'o' | 'i' => Parse::Unsupported("jumplist".into()),
                     'd' | 'u' | 'f' | 'b' | 'e' | 'y' => Parse::Unsupported("scroll".into()),
                     _ => Parse::Invalid,
@@ -439,8 +643,8 @@ impl Engine {
             'A' => Cmd::Insert(InsertKind::LineEnd),
             'o' => Cmd::Insert(InsertKind::OpenBelow),
             'O' => Cmd::Insert(InsertKind::OpenAbove),
-            'v' => Cmd::EnterVisual { linewise: false },
-            'V' => Cmd::EnterVisual { linewise: true },
+            'v' => Cmd::EnterVisual(VisualKind::Char),
+            'V' => Cmd::EnterVisual(VisualKind::Line),
             'x' => Cmd::DelChar { before: false, count: n, reg },
             'X' => Cmd::DelChar { before: true, count: n, reg },
             'D' => Cmd::ToEol { op: 'd', reg },
@@ -458,9 +662,46 @@ impl Engine {
                 Some(Key::Char(ch)) => return Parse::Done(Cmd::Replace { ch: *ch, count: n }, i + 2),
                 _ => return Parse::Invalid,
             },
-            'm' | '\'' | '`' => return Parse::Unsupported("marks".into()),
-            'q' | '@' => return Parse::Unsupported("macros".into()),
-            ':' => return Parse::Unsupported("cmdline".into()),
+            'm' => match keys.get(i + 1) {
+                None => return Parse::Incomplete,
+                Some(Key::Char(r)) if r.is_ascii_lowercase() => {
+                    return Parse::Done(Cmd::SetMark(*r), i + 2);
+                }
+                _ => return Parse::Invalid,
+            },
+            '\'' | '`' => {
+                let exact = c == '`';
+                match keys.get(i + 1) {
+                    None => return Parse::Incomplete,
+                    Some(Key::Char(r)) if r.is_ascii_lowercase() => {
+                        return Parse::Done(Cmd::Move(MotionKind::Mark { reg: *r, exact }, 1), i + 2);
+                    }
+                    _ => return Parse::Invalid,
+                }
+            }
+            'q' => {
+                if self.macro_recording.is_some() {
+                    return Parse::Done(Cmd::RecordStop, i + 1);
+                }
+                match keys.get(i + 1) {
+                    None => return Parse::Incomplete,
+                    Some(Key::Char(r)) if r.is_ascii_lowercase() => {
+                        return Parse::Done(Cmd::RecordStart(*r), i + 2);
+                    }
+                    _ => return Parse::Invalid,
+                }
+            }
+            '@' => match keys.get(i + 1) {
+                None => return Parse::Incomplete,
+                Some(Key::Char('@')) => {
+                    return Parse::Done(Cmd::PlayMacro { reg: None, count: n }, i + 2);
+                }
+                Some(Key::Char(r)) if r.is_ascii_lowercase() => {
+                    return Parse::Done(Cmd::PlayMacro { reg: Some(*r), count: n }, i + 2);
+                }
+                _ => return Parse::Invalid,
+            },
+            ':' => return Parse::Done(Cmd::StartEx, i + 1),
             'Z' => return Parse::Unsupported("quit".into()),
             '>' | '<' | '=' => return Parse::Unsupported("indent".into()),
             '%' => return Parse::Unsupported("matchpair".into()),
@@ -474,14 +715,17 @@ impl Engine {
         let c = match key {
             Key::Char(c) => c,
             Key::Esc => return Some(Cmd::Escape),
+            Key::Ctrl('v') => return Some(Cmd::EnterVisual(VisualKind::Block)),
             _ => return None,
         };
         match c {
             'd' | 'x' => Some(Cmd::Op { op: 'd', target: Target::Selection, reg }),
             'c' | 's' => Some(Cmd::Op { op: 'c', target: Target::Selection, reg }),
             'y' => Some(Cmd::Op { op: 'y', target: Target::Selection, reg }),
-            'v' => Some(Cmd::EnterVisual { linewise: false }),
-            'V' => Some(Cmd::EnterVisual { linewise: true }),
+            'v' => Some(Cmd::EnterVisual(VisualKind::Char)),
+            'V' => Some(Cmd::EnterVisual(VisualKind::Line)),
+            'I' if self.mode == Mode::VisualBlock => Some(Cmd::BlockInsert { append: false }),
+            'A' if self.mode == Mode::VisualBlock => Some(Cmd::BlockInsert { append: true }),
             _ => None,
         }
     }
@@ -547,6 +791,19 @@ impl Engine {
                 }
                 _ => return TargetParse::Invalid,
             },
+            '\'' | '`' => {
+                let exact = c == '`';
+                match keys.get(i + 1) {
+                    None => return TargetParse::Incomplete,
+                    Some(Key::Char(r)) if r.is_ascii_lowercase() => {
+                        return TargetParse::Done(
+                            Target::Motion(MotionKind::Mark { reg: *r, exact }, count),
+                            i + 2,
+                        );
+                    }
+                    _ => return TargetParse::Invalid,
+                }
+            }
             'f' | 'F' | 't' | 'T' => match keys.get(i + 1) {
                 None => return TargetParse::Incomplete,
                 Some(Key::Char(target)) => {
@@ -632,11 +889,57 @@ impl Engine {
                 self.start_change_record(keys);
                 self.enter_insert(kind);
             }
-            Cmd::EnterVisual { linewise } => {
+            Cmd::EnterVisual(kind) => {
                 if self.mode == Mode::Normal {
                     self.visual_anchor = self.buf.cursor;
                 }
-                self.mode = if linewise { Mode::VisualLine } else { Mode::Visual };
+                // Повторный v/V/Ctrl-v в том же режиме снимает выделение.
+                self.mode = if self.mode == kind.mode() { Mode::Normal } else { kind.mode() };
+            }
+            Cmd::BlockInsert { append } => {
+                let ((top, left), (bot, right)) = self.block_corners();
+                self.push_undo();
+                self.start_change_record(keys);
+                let col = if append { (right + 1).min(usize::MAX) } else { left };
+                self.mode = Mode::Insert;
+                self.block_insert = Some(BlockInsert {
+                    rows: (top + 1..=bot).collect(),
+                    col,
+                    append,
+                    typed: Vec::new(),
+                });
+                let len = self.buf.line_len(top);
+                if append && len < col {
+                    let pad = col - len;
+                    self.buf.line_mut(top).extend(std::iter::repeat_n(' ', pad));
+                }
+                self.buf.cursor = (top, col.min(self.buf.line_len(top)));
+                self.last_touched = Some((top, bot));
+            }
+            Cmd::SetMark(reg) => {
+                self.marks.insert(reg, self.buf.cursor);
+            }
+            Cmd::RecordStart(reg) => {
+                self.macro_recording = Some((reg, Vec::new()));
+            }
+            Cmd::RecordStop => {
+                if let Some((reg, recorded)) = self.macro_recording.take() {
+                    self.macros.insert(reg, recorded);
+                    self.last_macro = Some(reg);
+                }
+            }
+            Cmd::PlayMacro { reg, count } => {
+                let Some(reg) = reg.or(self.last_macro) else { return };
+                let Some(body) = self.macros.get(&reg).cloned() else { return };
+                self.last_macro = Some(reg);
+                for _ in 0..count.max(1) {
+                    for k in body.iter() {
+                        self.feed_inner(*k);
+                    }
+                }
+            }
+            Cmd::StartEx => {
+                self.cmdline = Some(CmdLine { prefix: ':', text: String::new() });
             }
             Cmd::DelChar { before, count, reg } => {
                 self.push_undo();
@@ -653,7 +956,7 @@ impl Engine {
                     return;
                 }
                 let removed: Vec<char> = self.buf.line_mut(row).drain(from..to).collect();
-                self.store_register(reg, vec![removed], false);
+                self.store_register(reg, vec![removed], false, false);
                 self.buf.cursor = (row, from);
                 self.buf.clamp_cursor(false);
                 self.last_touched = Some((row, row));
@@ -672,7 +975,7 @@ impl Engine {
                 } else {
                     Vec::new()
                 };
-                self.store_register(reg, vec![removed], false);
+                self.store_register(reg, vec![removed], false, false);
                 self.last_touched = Some((row, row));
                 if op == 'c' {
                     self.mode = Mode::Insert;
@@ -688,7 +991,7 @@ impl Engine {
                 let len = self.buf.line_len(row);
                 let to = (col + count).min(len);
                 let removed: Vec<char> = self.buf.line_mut(row).drain(col..to).collect();
-                self.store_register(reg, vec![removed], false);
+                self.store_register(reg, vec![removed], false, false);
                 self.mode = Mode::Insert;
                 self.last_touched = Some((row, row));
             }
@@ -699,7 +1002,7 @@ impl Engine {
                 let old = self.buf.line(row).to_vec();
                 let indent: Vec<char> =
                     old.iter().take_while(|c| c.is_whitespace()).copied().collect();
-                self.store_register(reg, vec![old], true);
+                self.store_register(reg, vec![old], true, false);
                 let indent_len = indent.len();
                 self.buf.set_line(row, indent);
                 self.buf.cursor = (row, indent_len);
@@ -773,7 +1076,8 @@ impl Engine {
                 self.last_touched = Some((row, row));
             }
             Cmd::StartSearch { forward } => {
-                self.cmdline = Some((String::new(), forward));
+                self.cmdline =
+                    Some(CmdLine { prefix: if forward { '/' } else { '?' }, text: String::new() });
             }
             Cmd::SearchWord => {
                 if let Some(word) = motion::word_under_cursor(&self.buf, self.buf.cursor) {
@@ -795,7 +1099,38 @@ impl Engine {
             Cmd::Escape => {
                 self.mode = Mode::Normal;
                 self.pending.clear();
+                self.block_insert = None;
                 self.buf.clamp_cursor(false);
+            }
+        }
+    }
+
+    /// Esc после Ctrl-v + I/A/c: повторяет набранное на остальных строках блока.
+    fn apply_block_insert(&mut self) {
+        let Some(block) = self.block_insert.take() else { return };
+        if block.typed.is_empty() {
+            return;
+        }
+        for row in block.rows {
+            let len = self.buf.line_len(row);
+            let at = if block.append {
+                // A дотягивает короткие строки пробелами, иначе столбец «провалится».
+                if len < block.col {
+                    let pad = block.col - len;
+                    let line = self.buf.line_mut(row);
+                    line.extend(std::iter::repeat_n(' ', pad));
+                }
+                block.col.min(self.buf.line_len(row))
+            } else {
+                // I короткие строки пропускает: вставлять некуда.
+                if len < block.col {
+                    continue;
+                }
+                block.col
+            };
+            let line = self.buf.line_mut(row);
+            for (i, c) in block.typed.iter().enumerate() {
+                line.insert(at + i, *c);
             }
         }
     }
@@ -879,6 +1214,11 @@ impl Engine {
                 let forward = if reverse { !forward } else { forward };
                 motion::find_in_line(&self.buf, pos, ch, forward, till)?
             }
+            MotionKind::Mark { reg, exact } => {
+                let (row, col) = *self.marks.get(&reg)?;
+                let row = row.min(self.buf.line_count() - 1);
+                if exact { (row, col.min(self.buf.max_col(row, false))) } else { (row, self.buf.first_non_blank(row)) }
+            }
             MotionKind::SearchNext { reverse } => {
                 let (pattern, forward) = self.last_search.clone()?;
                 let forward = if reverse { !forward } else { forward };
@@ -913,6 +1253,7 @@ impl Engine {
             Target::Selection => {
                 let (a, b) = self.visual_range()?;
                 let linewise = self.mode == Mode::VisualLine;
+                debug_assert!(self.mode != Mode::VisualBlock, "блок обрабатывается отдельно");
                 if linewise {
                     Some(((a.0, 0), (b.0, self.buf.line_len(b.0).saturating_sub(1)), true))
                 } else {
@@ -962,6 +1303,9 @@ impl Engine {
     }
 
     fn apply_operator(&mut self, op: char, target: Target, reg: Option<char>) -> bool {
+        if self.mode == Mode::VisualBlock && matches!(target, Target::Selection) {
+            return self.apply_block_operator(op, reg);
+        }
         let Some((start, end, linewise)) = self.resolve_target(op, target) else {
             return false;
         };
@@ -969,7 +1313,7 @@ impl Engine {
         self.store_register(reg, text, linewise);
         match op {
             'y' => {
-                if self.mode == Mode::Visual || self.mode == Mode::VisualLine {
+                if self.mode.is_visual() {
                     self.mode = Mode::Normal;
                 }
                 self.buf.cursor = if linewise { (start.0, self.buf.cursor.1) } else { start };
@@ -978,7 +1322,7 @@ impl Engine {
             'd' | 'c' => {
                 let change = op == 'c';
                 self.delete_range(start, end, linewise, change);
-                if self.mode == Mode::Visual || self.mode == Mode::VisualLine {
+                if self.mode.is_visual() {
                     self.mode = Mode::Normal;
                 }
                 if change {
@@ -990,6 +1334,43 @@ impl Engine {
             _ => return false,
         }
         self.last_touched = Some((start.0, end.0));
+        true
+    }
+
+    /// d/c/y над прямоугольником: каждая строка режется по одним и тем же
+    /// столбцам, регистр запоминает, что кусок был блочным.
+    fn apply_block_operator(&mut self, op: char, reg: Option<char>) -> bool {
+        let ((top, left), (bot, right)) = self.block_corners();
+        let mut taken: Vec<Vec<char>> = Vec::new();
+        for row in top..=bot {
+            let len = self.buf.line_len(row);
+            let from = left.min(len);
+            let to = (right + 1).min(len);
+            taken.push(self.buf.line(row)[from..to].to_vec());
+        }
+        self.store_register(reg, taken, false, true);
+        if op != 'y' {
+            for row in top..=bot {
+                let len = self.buf.line_len(row);
+                let from = left.min(len);
+                let to = (right + 1).min(len);
+                if to > from {
+                    self.buf.line_mut(row).drain(from..to);
+                }
+            }
+        }
+        self.mode = Mode::Normal;
+        self.buf.cursor = (top, left);
+        self.last_touched = Some((top, bot));
+        if op == 'c' {
+            // Как в vim: c над блоком печатает сразу во всех его строках.
+            self.mode = Mode::Insert;
+            self.block_insert =
+                Some(BlockInsert { rows: (top + 1..=bot).collect(), col: left, append: false, typed: Vec::new() });
+            self.buf.cursor = (top, left.min(self.buf.line_len(top)));
+        } else {
+            self.buf.clamp_cursor(false);
+        }
         true
     }
 
@@ -1050,8 +1431,14 @@ impl Engine {
         self.buf.cursor = start;
     }
 
-    fn store_register(&mut self, reg: Option<char>, lines: Vec<Vec<char>>, linewise: bool) {
-        let value = Register { lines, linewise };
+    fn store_register(
+        &mut self,
+        reg: Option<char>,
+        lines: Vec<Vec<char>>,
+        linewise: bool,
+        blockwise: bool,
+    ) {
+        let value = Register { lines, linewise, blockwise };
         if let Some(r) = reg {
             self.registers.insert(r, value.clone());
         }
@@ -1064,6 +1451,30 @@ impl Engine {
 
     fn put(&mut self, register: Register, after: bool, count: usize) {
         let (row, col) = self.buf.cursor;
+        if register.blockwise {
+            let at = if after { (col + 1).min(self.buf.line_len(row)) } else { col };
+            for (i, chunk) in register.lines.iter().enumerate() {
+                let target = row + i;
+                if target >= self.buf.line_count() {
+                    self.buf.insert_line(target, Vec::new());
+                }
+                let len = self.buf.line_len(target);
+                if len < at {
+                    self.buf.line_mut(target).extend(std::iter::repeat_n(' ', at - len));
+                }
+                let mut piece: Vec<char> = Vec::new();
+                for _ in 0..count.max(1) {
+                    piece.extend(chunk.iter().copied());
+                }
+                let line = self.buf.line_mut(target);
+                for (j, c) in piece.into_iter().enumerate() {
+                    line.insert(at + j, c);
+                }
+            }
+            self.buf.cursor = (row, at);
+            self.last_touched = Some((row, row + register.lines.len().saturating_sub(1)));
+            return;
+        }
         if register.linewise {
             let at = if after { row + 1 } else { row };
             let mut inserted = 0;
