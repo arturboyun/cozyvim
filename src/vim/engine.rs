@@ -213,7 +213,8 @@ impl Engine {
                 if !text.is_empty() {
                     self.last_search = Some((text.clone(), forward));
                 }
-                self.do_search(forward, 1);
+                // Идём в сторону самого поиска: `?` ищет назад, а не наоборот.
+                self.do_search(true, 1);
                 StepResult::Consumed
             }
             Key::Backspace => {
