@@ -1,0 +1,109 @@
+id = "mastery/surgery"
+chapter = "mastery"
+order = 35
+
+[text.ru]
+title = "Точечные команды: r, s, J"
+intro = """
+Есть правки, ради которых заходить в insert жалко. Для них у vim заготовлены
+однокнопочные команды.
+
+r меняет символ под курсором, не выходя из нормального режима: нажал r и новый
+символ — всё. s стирает символ и пускает печатать. S делает то же со строкой,
+сохраняя отступ. C режет от курсора до конца строки и сразу даёт печатать.
+
+J склеивает следующую строку с текущей, аккуратно: лишний отступ выкидывается,
+между кусками ставится один пробел.
+"""
+[text.en]
+title = "Surgical commands: r, s, J"
+intro = """
+Some edits are too small to enter insert for. r replaces the character under
+the cursor, s deletes it and starts typing, S does the same to a whole line
+keeping the indent, C cuts to the end of the line. J joins the next line, with
+the indent dropped and a single space inserted.
+"""
+
+[[exercise]]
+buffer = ["let x = 5;"]
+cursor = [0, 8]
+goal = ["let x = 7;"]
+solutions = ["r7"]
+[exercise.text.ru]
+task = "Исправь 5 на 7."
+hint = "Одна замена — одно r, без входа в insert."
+[exercise.text.en]
+task = "Change the 5 into a 7."
+hint = "One replacement, one r, no insert mode."
+
+[[exercise]]
+buffer = ["cat dog"]
+cursor = [0, 0]
+goal = ["*** dog"]
+solutions = ["3r*"]
+[exercise.text.ru]
+task = "Замажь первое слово звёздочками."
+hint = "Счётчик действует и на r: 3r* меняет три символа разом."
+[exercise.text.en]
+task = "Mask the first word with stars."
+hint = "A count works on r too: 3r* replaces three characters at once."
+
+[[exercise]]
+buffer = ["let x = 5;"]
+cursor = [0, 4]
+goal = ["let y = 5;"]
+solutions = ["sy<Esc>", "ry"]
+[exercise.text.ru]
+task = "Переименуй переменную x в y."
+hint = "Для одного символа r короче, чем s: менять нечего, кроме буквы."
+[exercise.text.en]
+task = "Rename the variable x to y."
+hint = "For a single character r beats s: there is nothing but the letter to change."
+
+[[exercise]]
+buffer = ["    old_call();"]
+cursor = [0, 8]
+goal = ["    new_call();"]
+solutions = ["Snew_call();<Esc>", "^Cnew_call();<Esc>"]
+[exercise.text.ru]
+task = "Перепиши строку целиком на new_call();"
+hint = "S чистит строку, но оставляет отступ — набирать пробелы заново не нужно."
+[exercise.text.en]
+task = "Rewrite the whole line as new_call();"
+hint = "S clears the line but keeps the indent."
+
+[[exercise]]
+buffer = ["let sum =", "    a + b;"]
+cursor = [0, 0]
+goal = ["let sum = a + b;"]
+solutions = ["J"]
+[exercise.text.ru]
+task = "Собери выражение в одну строку."
+hint = "J сам выкидывает отступ и ставит ровно один пробел."
+[exercise.text.en]
+task = "Pull the expression onto one line."
+hint = "J drops the indent and inserts exactly one space."
+
+[[exercise]]
+buffer = ["a();", "b();", "c();"]
+cursor = [0, 0]
+goal = ["a(); b(); c();"]
+solutions = ["3J", "JJ"]
+[exercise.text.ru]
+task = "Склей все три строки в одну."
+hint = "3J склеивает три строки за раз. JJ — то же самое по шагам."
+[exercise.text.en]
+task = "Join all three lines into one."
+hint = "3J joins three lines at once; JJ does it step by step."
+
+[[exercise]]
+buffer = ["let path = old_value;"]
+cursor = [0, 11]
+goal = ["let path = cfg.dir;"]
+solutions = ["Ccfg.dir;<Esc>", "c$cfg.dir;<Esc>"]
+[exercise.text.ru]
+task = "Перепиши всё от курсора до конца строки на cfg.dir;"
+hint = "C — то же, что c$, одной клавишей."
+[exercise.text.en]
+task = "Rewrite everything from the cursor to the end of the line as cfg.dir;"
+hint = "C is c$ in one key."

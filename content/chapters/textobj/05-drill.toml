@@ -1,0 +1,92 @@
+id = "textobj/drill"
+chapter = "textobj"
+order = 19
+
+[text.ru]
+title = "Разбор кода объектами"
+intro = """
+Настоящая работа редко сводится к одному объекту. Здесь — обычные правки из
+рабочего дня: переименовать, переписать аргумент, вычистить литерал.
+
+Правило выбора простое: если правишь «то, что внутри» — бери i. Если убираешь
+кусок совсем и не хочешь остаться с лишним пробелом или пустыми скобками — a.
+"""
+[text.en]
+title = "Taking code apart with objects"
+intro = """
+Real edits rarely use a single object. The rule of thumb: editing what is
+inside — use i. Removing a chunk entirely without leaving a stray space or
+empty brackets — use a.
+"""
+
+[[exercise]]
+buffer = ['let user = User::new("bob", 30);']
+cursor = [0, 23]
+goal = ['let user = User::new("alice", 30);']
+solutions = ['ci"alice<Esc>']
+[exercise.text.ru]
+task = "Замени имя в литерале на alice."
+hint = 'Внутренность кавычек — i".'
+[exercise.text.en]
+task = "Change the name in the literal to alice."
+hint = 'Inside the quotes — i".'
+
+[[exercise]]
+buffer = ['let user = User::new("bob", 30);']
+cursor = [0, 23]
+goal = ['let user = User::new();']
+solutions = ["di("]
+[exercise.text.ru]
+task = "Очисти оба аргумента вызова, скобки оставь."
+hint = "Курсор внутри кавычек, но они внутри скобок — di( берёт пару снаружи."
+[exercise.text.en]
+task = "Clear both call arguments, keep the parentheses."
+hint = "The cursor is inside the quotes, but they are inside the parens — di( takes the outer pair."
+
+[[exercise]]
+buffer = ["fn handler(req: Request) -> Response {"]
+cursor = [0, 17]
+goal = ["fn handler(req: Req) -> Response {"]
+solutions = ["ciwReq<Esc>"]
+[exercise.text.ru]
+task = "Сократи тип аргумента до Req."
+hint = "Тип — отдельное слово, двоеточие и пробел в iw не входят."
+[exercise.text.en]
+task = "Shorten the argument type to Req."
+hint = "The type is its own word; the colon is not part of iw."
+
+[[exercise]]
+buffer = ["let list = vec![1, 2, 3, 4];"]
+cursor = [0, 16]
+goal = ["let list = vec![];"]
+solutions = ["di[", "di]"]
+[exercise.text.ru]
+task = "Опустоши вектор, макрос и скобки не трогай."
+hint = "Квадратные скобки — такой же объект, как круглые."
+[exercise.text.en]
+task = "Empty the vector, keeping the macro and brackets."
+hint = "Square brackets are the same kind of object."
+
+[[exercise]]
+buffer = ["let flags = { debug: true, trace: false };"]
+cursor = [0, 16]
+goal = ["let flags = { verbose: true, trace: false };"]
+solutions = ["ciwverbose<Esc>"]
+[exercise.text.ru]
+task = "Переименуй поле debug в verbose."
+hint = "Одно поле — одно слово: ciw, а не ci{."
+[exercise.text.en]
+task = "Rename the debug field to verbose."
+hint = "One field is one word: ciw, not ci{."
+
+[[exercise]]
+buffer = ["const TIMEOUT = 30;", "const RETRIES = 5;", "", "const DEBUG = false;"]
+cursor = [3, 6]
+goal = ["const TIMEOUT = 30;", "const RETRIES = 5;", ""]
+solutions = ["dip", "dap"]
+[exercise.text.ru]
+task = "Удали последний абзац — одинокую константу DEBUG."
+hint = "Абзац из одной строки — тоже абзац."
+[exercise.text.en]
+task = "Delete the last paragraph — the lone DEBUG constant."
+hint = "A one-line paragraph is still a paragraph."

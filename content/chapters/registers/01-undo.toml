@@ -1,0 +1,72 @@
+id = "registers/undo"
+chapter = "registers"
+order = 25
+
+[text.ru]
+title = "u и Ctrl-r: право на ошибку"
+intro = """
+Скорость в vim держится на том, что ошибка ничего не стоит. u отменяет
+последнее изменение, Ctrl-r возвращает отменённое. Пока ты не вышел из
+редактора, история никуда не девается.
+
+Одно изменение — это одна команда в нормальном режиме и целый заход в режим
+вставки: всё, что напечатано между i и Esc, откатывается разом. Поэтому длинные
+заходы в insert — плохая идея не только для рефлексов, но и для отката.
+
+Счётчик работает и здесь: 3u откатывает три изменения назад.
+"""
+[text.en]
+title = "u and Ctrl-r: the right to be wrong"
+intro = """
+Speed in vim rests on mistakes being cheap. u undoes the last change, Ctrl-r
+redoes it. One change is one normal-mode command — or a whole insert session,
+from i to Esc, undone at once. A count works here too: 3u steps back three.
+"""
+
+[[exercise]]
+buffer = ["let a = 1;", "let b = 2;", "let c = 3;"]
+cursor = [0, 0]
+goal = ["let a = 1;", "let b = 2;", "let c = 3;"]
+solutions = ["ddu"]
+[exercise.text.ru]
+task = "Удали первую строку и тут же верни её."
+hint = "u отменяет последнее изменение целиком."
+[exercise.text.en]
+task = "Delete the first line and bring it right back."
+hint = "u undoes the whole last change."
+
+[[exercise]]
+buffer = ["let a = 1;", "let b = 2;", "let c = 3;"]
+cursor = [0, 0]
+goal = ["let b = 2;", "let c = 3;"]
+solutions = ["ddddu"]
+[exercise.text.ru]
+task = "Удали две строки, но передумай насчёт второй."
+hint = "Каждое dd — отдельное изменение, значит, откатывается по одному."
+[exercise.text.en]
+task = "Delete two lines, then change your mind about the second."
+hint = "Each dd is its own change, so it undoes one at a time."
+
+[[exercise]]
+buffer = ["let a = 1;", "let b = 2;", "let c = 3;"]
+cursor = [0, 4]
+goal = ["let total = 1;", "let b = 2;", "let c = 3;"]
+solutions = ["ciwtotal<Esc>u<C-r>"]
+[exercise.text.ru]
+task = "Переименуй a в total, откати правку и верни её обратно."
+hint = "Ctrl-r — отмена отмены. Весь заход в insert считается одним изменением."
+[exercise.text.en]
+task = "Rename a to total, undo it, then redo it."
+hint = "Ctrl-r undoes the undo; the whole insert session counts as one change."
+
+[[exercise]]
+buffer = ["let a = 1;", "let b = 2;", "let c = 3;"]
+cursor = [0, 0]
+goal = ["et a = 1;", "let b = 2;", "let c = 3;"]
+solutions = ["xxx2u", "xxxuu"]
+[exercise.text.ru]
+task = "Сотри три символа в начале строки, потом верни два из них."
+hint = "Счётчик действует и на откат: 2u — два шага назад."
+[exercise.text.en]
+task = "Delete three characters, then bring two of them back."
+hint = "A count applies to undo as well: 2u steps back twice."

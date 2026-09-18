@@ -1,0 +1,81 @@
+id = "textobj/quotes"
+chapter = "textobj"
+order = 16
+
+[text.ru]
+title = 'Кавычки: i" и a"'
+intro = """
+Строковый литерал — самое частое место правки в коде, и самое неудобное для
+движений: считать символы до закрывающей кавычки никто не хочет.
+
+i" — то, что внутри кавычек. a" — вместе с самими кавычками. Курсору не нужно
+стоять на кавычке: достаточно быть где-то в строке до её закрытия. То же самое
+работает с одинарными i' и обратными i`.
+"""
+[text.en]
+title = 'Quotes: i" and a"'
+intro = """
+String literals are the most common thing to edit and the most tedious to reach
+by counting characters. i" is what is inside the quotes, a" includes the quotes
+themselves. The same works for i' and i`.
+"""
+
+[[exercise]]
+buffer = ['let msg = "hello world";']
+cursor = [0, 13]
+goal = ['let msg = "";']
+solutions = ['di"']
+[exercise.text.ru]
+task = "Очисти содержимое строки, кавычки оставь на месте."
+hint = 'i" — внутренность кавычек, сами кавычки не в счёт.'
+[exercise.text.en]
+task = "Empty the string literal but keep the quotes."
+hint = 'i" is the inside of the quotes.'
+
+[[exercise]]
+buffer = ['let msg = "hello world";']
+cursor = [0, 13]
+goal = ['let msg = "goodbye";']
+solutions = ['ci"goodbye<Esc>']
+[exercise.text.ru]
+task = "Замени содержимое строки на goodbye."
+hint = 'ci" — очистить кавычки и сразу печатать.'
+[exercise.text.en]
+task = "Replace the string contents with goodbye."
+hint = 'ci" clears the quotes and drops you into insert.'
+
+[[exercise]]
+buffer = ['let msg = "hello world";']
+cursor = [0, 13]
+goal = ["let msg = ;"]
+solutions = ['da"']
+[exercise.text.ru]
+task = "Удали литерал вместе с кавычками."
+hint = 'a" берёт кавычки в комплекте.'
+[exercise.text.en]
+task = "Delete the literal together with its quotes."
+hint = 'a" takes the quotes along.'
+
+[[exercise]]
+buffer = ["const tag = 'old';"]
+cursor = [0, 14]
+goal = ["const tag = 'new';"]
+solutions = ["ci'new<Esc>"]
+[exercise.text.ru]
+task = "Замени old на new внутри одинарных кавычек."
+hint = "Объект тот же, кавычка другая: ci'."
+[exercise.text.en]
+task = "Replace old with new inside the single quotes."
+hint = "Same object, different quote: ci'."
+
+[[exercise]]
+buffer = ['println!("total: {}", total);']
+cursor = [0, 5]
+goal = ['println!("", total);']
+solutions = ['di"']
+[exercise.text.ru]
+task = "Курсор даже не в кавычках — всё равно очисти литерал."
+hint = 'Объект ищет ближайшую пару кавычек впереди, стоять внутри не обязательно.'
+[exercise.text.en]
+task = "The cursor is not even inside the quotes — clear the literal anyway."
+hint = "The object finds the next pair of quotes ahead."

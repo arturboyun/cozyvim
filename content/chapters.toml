@@ -34,7 +34,6 @@ subtitle = "Operator + motion = any command"
 [[chapter]]
 id = "textobj"
 order = 4
-coming_soon = true
 [chapter.text.ru]
 title = "Текстовые объекты"
 subtitle = "Слово, кавычки, скобки, абзац"
@@ -45,7 +44,6 @@ subtitle = "Words, quotes, brackets, paragraphs"
 [[chapter]]
 id = "search"
 order = 5
-coming_soon = true
 [chapter.text.ru]
 title = "Поиск и прыжки"
 subtitle = "f, t, /, n — попасть точно"
@@ -56,7 +54,6 @@ subtitle = "f, t, /, n — land exactly"
 [[chapter]]
 id = "registers"
 order = 6
-coming_soon = true
 [chapter.text.ru]
 title = "Отмена и регистры"
 subtitle = "u, точка, копилка текста"
@@ -67,7 +64,6 @@ subtitle = "u, the dot, and where text is kept"
 [[chapter]]
 id = "visual"
 order = 7
-coming_soon = true
 [chapter.text.ru]
 title = "Визуальный режим"
 subtitle = "Когда нужно увидеть выделение"
@@ -78,10 +74,9 @@ subtitle = "When you need to see the selection"
 [[chapter]]
 id = "mastery"
 order = 8
-coming_soon = true
 [chapter.text.ru]
 title = "Мастерство"
-subtitle = "Точка, метки, макросы"
+subtitle = "Точные команды, счётчики, массовые правки"
 [chapter.text.en]
 title = "Mastery"
-subtitle = "The dot, marks, macros"
+subtitle = "Precision commands, counts, mass edits"

@@ -1,0 +1,81 @@
+id = "search/op-find"
+chapter = "search"
+order = 22
+
+[text.ru]
+title = "Оператор + прицел"
+intro = """
+f и t — обычные движения, а значит, грамматика их принимает: d, c и y берут
+их целью так же, как w или $.
+
+Вот где разница между f и t становится важной. dt) удаляет до скобки, не
+трогая её. df) съедает скобку вместе с содержимым. ct" очищает строку до
+кавычки и сразу пускает печатать. Одна клавиша решает, останется ли скобка.
+"""
+[text.en]
+title = "Operator + aim"
+intro = """
+f and t are ordinary motions, so the grammar takes them: d, c and y accept them
+like w or $. This is where the difference matters: dt) deletes up to the paren,
+df) eats the paren too, ct" clears up to the quote and starts typing.
+"""
+
+[[exercise]]
+buffer = ["let s = greet(name);"]
+cursor = [0, 14]
+goal = ["let s = greet();"]
+solutions = ["dt)", "di(", "de"]
+[exercise.text.ru]
+task = "Очисти аргумент, скобки оставь."
+hint = "dt) останавливается перед скобкой. Объект di( сделает то же самое."
+[exercise.text.en]
+task = "Clear the argument, keep the parentheses."
+hint = "dt) stops before the paren; di( does the same job."
+
+[[exercise]]
+buffer = ["let s = greet(name);"]
+cursor = [0, 14]
+goal = ["let s = greet(;"]
+solutions = ["df)"]
+[exercise.text.ru]
+task = "Удали аргумент вместе с закрывающей скобкой."
+hint = "f включает сам символ в удаление, t — нет."
+[exercise.text.en]
+task = "Delete the argument along with the closing paren."
+hint = "f includes the character, t does not."
+
+[[exercise]]
+buffer = ["let s = greet(name);"]
+cursor = [0, 14]
+goal = ["let s = greet(user);"]
+solutions = ["ct)user<Esc>"]
+[exercise.text.ru]
+task = "Замени аргумент на user."
+hint = "ct) — очистить до скобки и печатать."
+[exercise.text.en]
+task = "Replace the argument with user."
+hint = "ct) clears up to the paren and drops you into insert."
+
+[[exercise]]
+buffer = ["const URL = http://localhost:8080/api;"]
+cursor = [0, 12]
+goal = ["const URL = :8080/api;"]
+solutions = ["2dt:", "d2t:"]
+[exercise.text.ru]
+task = "Удали схему и хост, оставив двоеточие с портом."
+hint = "Двоеточий два: первое в http://. Счётчик отправляет прицел ко второму — 2dt:."
+[exercise.text.en]
+task = "Delete the scheme and host, keeping the colon and port."
+hint = "There are two colons; a count sends the aim to the second one: 2dt:."
+
+[[exercise]]
+buffer = ["fn area(w: f64, h: f64) -> f64 {"]
+cursor = [0, 8]
+goal = ["fn area(h: f64) -> f64 {"]
+solutions = ["df,x", "df,dw"]
+[exercise.text.ru]
+task = "Удали первый параметр вместе с запятой и пробелом."
+hint = "df, снимает параметр вместе с запятой, а лишний пробел добивает x."
+[exercise.text.en]
+task = "Delete the first parameter along with its comma and space."
+hint = "df, takes the parameter and its comma; x finishes off the leftover space."

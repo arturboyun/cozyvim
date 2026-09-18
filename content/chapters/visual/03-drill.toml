@@ -1,0 +1,81 @@
+id = "visual/drill"
+chapter = "visual"
+order = 32
+
+[text.ru]
+title = "Когда выделение окупается"
+intro = """
+Визуальный режим стоит лишних нажатий, и платить за них имеет смысл в двух
+случаях: границы куска неочевидны, или правка достаточно редкая, чтобы не
+держать её в голове. Всё остальное быстрее сказать оператором.
+
+В этих упражнениях у каждого задания есть оба пути. Тренажёр засчитает любой,
+но три звезды даёт тот, что короче, — а короче почти всегда грамматика.
+"""
+[text.en]
+title = "When a selection pays off"
+intro = """
+Visual mode costs extra keys, and it is worth it when the bounds are unobvious
+or the edit is rare enough not to keep in your head. Both paths count here, but
+the shorter one — usually the grammar — earns three stars.
+"""
+
+[[exercise]]
+buffer = ["const KEYS = [alpha, beta, gamma];"]
+cursor = [0, 14]
+goal = ["const KEYS = [];"]
+solutions = ["di[", "vt]d"]
+[exercise.text.ru]
+task = "Опустоши список."
+hint = "Объект знает границы сам. Выделение — если хочешь их увидеть."
+[exercise.text.en]
+task = "Empty the list."
+hint = "The object knows the bounds; a selection lets you see them."
+
+[[exercise]]
+buffer = ["fn small() {", "    body();", "}", "", "fn other() {}"]
+cursor = [0, 0]
+goal = ["", "fn other() {}"]
+solutions = ["V2jd", "3dd", "dip"]
+[exercise.text.ru]
+task = "Удали функцию целиком, пустую строку под ней оставь."
+hint = "Три строки: V и два j, или просто 3dd, или объект абзаца dip — пустую строку он не тронет."
+[exercise.text.en]
+task = "Delete the whole function, keeping the blank line below."
+hint = "Three lines: V plus two j, plain 3dd, or the paragraph object dip, which leaves the blank line."
+
+[[exercise]]
+buffer = ["let a = 1; let b = 2;"]
+cursor = [0, 11]
+goal = ["let a = 1; "]
+solutions = ["D", "v$d"]
+[exercise.text.ru]
+task = "Отрежь второе объявление вместе с точкой с запятой."
+hint = "До конца строки ведёт D — одна клавиша против трёх."
+[exercise.text.en]
+task = "Cut off the second declaration, semicolon included."
+hint = "D reaches the end of the line in one key."
+
+[[exercise]]
+buffer = ["a = 1", "b = 2", "c = 3", "d = 4"]
+cursor = [1, 0]
+goal = ["a = 1", "d = 4", "b = 2", "c = 3"]
+solutions = ["Vjdjp", "2ddjp"]
+[exercise.text.ru]
+task = "Перенеси строки b и c в самый низ."
+hint = "Вырезать выделение, доехать до последней строки, вставить — p кладёт блок под неё."
+[exercise.text.en]
+task = "Move lines b and c to the bottom."
+hint = "Cut the selection, go to the last line, paste — p drops the block below it."
+
+[[exercise]]
+buffer = ["header();", "payload();", "footer();"]
+cursor = [1, 0]
+goal = ["header();", "footer();"]
+solutions = ["dd", "Vd"]
+[exercise.text.ru]
+task = "Убери среднюю строку."
+hint = "Одна строка — работа для dd. Визуальный режим здесь только лишние клавиши."
+[exercise.text.en]
+task = "Remove the middle line."
+hint = "One line is a job for dd; visual mode would just cost keys."

@@ -1,0 +1,72 @@
+id = "search/star"
+chapter = "search"
+order = 24
+
+[text.ru]
+title = "* — поиск слова под курсором"
+intro = """
+Самый частый поиск — «где ещё встречается вот это». Набирать имя переменной
+руками незачем: * ищет слово под курсором вперёд, дальше работают n и N.
+
+Отсюда рождается главный приём переименования без макросов: встал на слово,
+нажал *, потом ciw и новое имя — и дальше n и точка, но про точку будет
+следующая глава.
+"""
+[text.en]
+title = "* — search the word under the cursor"
+intro = """
+The most common search is "where else does this appear". * searches for the
+word under the cursor; n and N then walk the matches. This is the start of the
+rename-without-macros trick: *, then ciw, then n and the dot command.
+"""
+
+[[exercise]]
+buffer = ["let count = 0;", "while count < 10 {", "    count += 1;", "}"]
+cursor = [0, 4]
+goal = ["let count = 0;", "while count < 10 {", "    count += 1;", "}"]
+goal_cursor = [1, 6]
+solutions = ["*"]
+[exercise.text.ru]
+task = "Найди следующее вхождение count, не набирая слово руками."
+hint = "* берёт слово прямо из-под курсора."
+[exercise.text.en]
+task = "Find the next occurrence of count without typing the word."
+hint = "* takes the word from under the cursor."
+
+[[exercise]]
+buffer = ["let count = 0;", "while count < 10 {", "    count += 1;", "}"]
+cursor = [0, 4]
+goal = ["let count = 0;", "while count < 10 {", "    count += 1;", "}"]
+goal_cursor = [2, 4]
+solutions = ["*n"]
+[exercise.text.ru]
+task = "Дойди до третьего вхождения count."
+hint = "После * дальше ведёт n."
+[exercise.text.en]
+task = "Reach the third occurrence of count."
+hint = "After *, n carries on."
+
+[[exercise]]
+buffer = ["let count = 0;", "while count < 10 {", "    count += 1;", "}"]
+cursor = [0, 4]
+goal = ["let count = 0;", "while total < 10 {", "    count += 1;", "}"]
+solutions = ["*ciwtotal<Esc>"]
+[exercise.text.ru]
+task = "Перейди ко второму count и переименуй его в total."
+hint = "* довозит до слова, ciw меняет его — поиск и правка складываются."
+[exercise.text.en]
+task = "Jump to the second count and rename it to total."
+hint = "* gets you there, ciw changes it."
+
+[[exercise]]
+buffer = ["let count = 0;", "while count < 10 {", "    count += 1;", "}"]
+cursor = [2, 4]
+goal = ["let count = 0;", "while count < 10 {", "    count += 1;", "}"]
+goal_cursor = [0, 4]
+solutions = ["*"]
+[exercise.text.ru]
+task = "Из последнего вхождения попади на первое — поиск заворачивается."
+hint = "Дойдя до конца файла, поиск продолжает с начала. Отдельной команды для этого не нужно."
+[exercise.text.en]
+task = "From the last occurrence, land on the first — search wraps around."
+hint = "At the end of the file the search continues from the top."

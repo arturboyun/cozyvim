@@ -1,0 +1,93 @@
+id = "mastery/counts"
+chapter = "mastery"
+order = 36
+
+[text.ru]
+title = "Счётчики везде"
+intro = """
+Счётчик — не отдельная команда, а множитель, который принимает почти всё:
+движение (3w), оператор с движением (d2w и 2dw — одно и то же), вставку (3p),
+замену (3r-), склейку (3J), откат (2u).
+
+Считать до пяти стоит, дальше — уже нет: пока ты пересчитываешь строки, проще
+доехать поиском. Хорошее правило — счётчик для того, что видно одним взглядом.
+"""
+[text.en]
+title = "Counts everywhere"
+intro = """
+A count is a multiplier that almost everything accepts: motions (3w), operators
+(d2w and 2dw are the same), pastes (3p), replaces (3r-), joins (3J), undo (2u).
+Counting up to five is worth it; beyond that, searching is faster.
+"""
+
+[[exercise]]
+buffer = ["one two three four five"]
+cursor = [0, 0]
+goal = ["four five"]
+solutions = ["3dw", "d3w"]
+[exercise.text.ru]
+task = "Удали первые три слова."
+hint = "Счётчик можно ставить и перед оператором, и перед движением — результат один."
+[exercise.text.en]
+task = "Delete the first three words."
+hint = "The count goes before the operator or before the motion — same result."
+
+[[exercise]]
+buffer = ["fn a() {}", "fn b() {}", "fn c() {}", "fn d() {}"]
+cursor = [1, 0]
+goal = ["fn a() {}"]
+solutions = ["3dd"]
+[exercise.text.ru]
+task = "Снеси три последние функции."
+hint = "3dd — три строки одной командой."
+[exercise.text.en]
+task = "Delete the last three functions."
+hint = "3dd — three lines in one command."
+
+[[exercise]]
+buffer = ["sep"]
+cursor = [0, 0]
+goal = ["sep", "sep", "sep", "sep"]
+solutions = ["yy3p"]
+[exercise.text.ru]
+task = "Размножь строку до четырёх копий."
+hint = "Счётчик перед p вставляет содержимое регистра нужное число раз."
+[exercise.text.en]
+task = "Turn the line into four copies."
+hint = "A count before p pastes the register that many times."
+
+[[exercise]]
+buffer = ["value = 2024-01-02;"]
+cursor = [0, 8]
+goal = ["value = ##########;"]
+solutions = ["10r#"]
+[exercise.text.ru]
+task = "Замажь дату решётками, не трогая точку с запятой."
+hint = "Десять символов — 10r#. Если r упрётся в конец строки, он не сделает ничего."
+[exercise.text.en]
+task = "Mask the date with hashes, leaving the semicolon alone."
+hint = "Ten characters: 10r#. If r would run past the line end it does nothing at all."
+
+[[exercise]]
+buffer = ["a = 1;", "b = 2;", "c = 3;", "d = 4;"]
+cursor = [0, 0]
+goal = ["a = 1; b = 2; c = 3;", "d = 4;"]
+solutions = ["3J"]
+[exercise.text.ru]
+task = "Собери первые три строки в одну, четвёртую оставь."
+hint = "3J — это «сделай три строки одной», а не «склей три раза»."
+[exercise.text.en]
+task = "Join the first three lines into one, leaving the fourth."
+hint = "3J means 'make three lines into one', not 'join three times'."
+
+[[exercise]]
+buffer = ["let list = [1, 2, 3, 4, 5];"]
+cursor = [0, 14]
+goal = ["let list = [1, 4, 5];"]
+solutions = ["2df,", "d2f,"]
+[exercise.text.ru]
+task = "Убери из списка второй и третий элементы."
+hint = "Счётчик действует и на прицел: 2df, доезжает до второй запятой и забирает всё до неё включительно."
+[exercise.text.en]
+task = "Drop the second and third elements of the list."
+hint = "The count applies to the aim: 2df, reaches the second comma and takes everything up to it."

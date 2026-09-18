@@ -1,0 +1,82 @@
+id = "registers/put"
+chapter = "registers"
+order = 26
+
+[text.ru]
+title = "Удалённое не пропадает: p и P"
+intro = """
+В vim нет отдельного «вырезать». Всё, что удалено, ложится в безымянный
+регистр — d, c, x, s кладут туда же, куда y. Поэтому «переместить» — это
+просто «удалить, встать куда надо, вставить».
+
+p вставляет после курсора, P — перед ним. Если в регистре лежат целые строки
+(после dd или yy), вставка тоже построчная: p кладёт строку под текущей,
+P — над ней. Регистр помнит не только текст, но и то, был он строчным или нет.
+"""
+[text.en]
+title = "Deleted is not gone: p and P"
+intro = """
+Vim has no separate "cut": d, c, x and s all put text into the unnamed register,
+the same one y fills. So "move" is just delete, go somewhere, paste. p pastes
+after the cursor, P before it. Linewise yanks paste as whole lines.
+"""
+
+[[exercise]]
+buffer = ["teh cat"]
+cursor = [0, 1]
+goal = ["the cat"]
+solutions = ["xp"]
+[exercise.text.ru]
+task = "Поменяй местами e и h — почини опечатку."
+hint = "x кладёт символ в регистр, p возвращает его уже за курсором."
+[exercise.text.en]
+task = "Swap the e and the h to fix the typo."
+hint = "x stores the character, p drops it back after the cursor."
+
+[[exercise]]
+buffer = ["let a = 1;"]
+cursor = [0, 0]
+goal = ["let a = 1;", "let a = 1;"]
+solutions = ["yyp"]
+[exercise.text.ru]
+task = "Продублируй строку."
+hint = "yy копирует строку целиком, p кладёт копию под ней."
+[exercise.text.en]
+task = "Duplicate the line."
+hint = "yy copies the line, p puts the copy below."
+
+[[exercise]]
+buffer = ["let b = 2;", "let a = 1;"]
+cursor = [0, 0]
+goal = ["let a = 1;", "let b = 2;"]
+solutions = ["ddp"]
+[exercise.text.ru]
+task = "Поменяй строки местами."
+hint = "dd забирает строку с собой, p возвращает её ниже соседа."
+[exercise.text.en]
+task = "Swap the two lines."
+hint = "dd takes the line with it, p puts it back below its neighbour."
+
+[[exercise]]
+buffer = ["fn main() {", "    let x = 1;", "}", "use std::fmt;"]
+cursor = [3, 0]
+goal = ["use std::fmt;", "fn main() {", "    let x = 1;", "}"]
+solutions = ["ddggP", "dd2kP"]
+[exercise.text.ru]
+task = "Перенеси строку с use в самое начало файла."
+hint = "dd — забрать, gg — доехать до первой строки, P — вставить над ней."
+[exercise.text.en]
+task = "Move the use line to the very top of the file."
+hint = "dd to take it, gg to reach line one, P to paste above."
+
+[[exercise]]
+buffer = ["let a = value;", "let b = ;"]
+cursor = [0, 8]
+goal = ["let a = value;", "let b = value;"]
+solutions = ["yiwj$P"]
+[exercise.text.ru]
+task = "Скопируй value во вторую строку, перед точкой с запятой."
+hint = "yiw кладёт слово в регистр; P вставляет перед курсором, а не после."
+[exercise.text.en]
+task = "Copy value into the second line, before the semicolon."
+hint = "yiw yanks the word; P pastes before the cursor, not after."

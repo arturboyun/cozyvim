@@ -1,0 +1,97 @@
+id = "textobj/iw-aw"
+chapter = "textobj"
+order = 15
+
+[text.ru]
+title = "iw и aw: слово целиком"
+intro = """
+Движения работают от курсора. Но чаще всего курсор стоит в середине слова, а
+править надо слово целиком — и тогда dw съедает только хвост.
+
+Текстовый объект отвечает на вопрос «что», а не «докуда». iw — inner word,
+само слово. aw — a word, слово вместе с пробелом за ним. Объект подставляется
+туда же, куда движение: d, c, y принимают его без всяких оговорок.
+
+Слово для iw — это цепочка символов одного сорта: буквы и цифры отдельно,
+знаки препинания отдельно. Заглавные W работают по пробелам: iW и aW берут
+кусок целиком, со слэшами и точками.
+"""
+[text.en]
+title = "iw and aw: the whole word"
+intro = """
+Motions run from the cursor, but the cursor is usually in the middle of a word.
+A text object answers "what", not "how far": iw is the word itself, aw is the
+word plus the space after it. Operators take objects exactly like motions.
+"""
+
+[[exercise]]
+buffer = ["let total = count + offset;"]
+cursor = [0, 14]
+goal = ["let total =  + offset;"]
+solutions = ["diw"]
+[exercise.text.ru]
+task = "Курсор в середине count. Удали слово целиком, пробелы не трогай."
+hint = "dw отсюда съест только хвост слова. Нужен объект: diw."
+[exercise.text.en]
+task = "The cursor sits inside count. Delete the whole word, keep the spaces."
+hint = "dw would only take the tail. Use the object: diw."
+
+[[exercise]]
+buffer = ["let total = count + offset;"]
+cursor = [0, 14]
+goal = ["let total = + offset;"]
+solutions = ["daw"]
+[exercise.text.ru]
+task = "Теперь удали count вместе с пробелом после него."
+hint = "a — «a word», слово плюс пробел. Строка остаётся опрятной."
+[exercise.text.en]
+task = "Now delete count along with the space after it."
+hint = "a means 'a word' — the word plus its trailing space."
+
+[[exercise]]
+buffer = ["let total = count + offset;"]
+cursor = [0, 14]
+goal = ["let total = amount + offset;"]
+solutions = ["ciwamount<Esc>"]
+[exercise.text.ru]
+task = "Замени count на amount, не выходя из середины слова."
+hint = "ciw — сменить слово. Дальше печатай и выходи по Esc."
+[exercise.text.en]
+task = "Replace count with amount without leaving the middle of the word."
+hint = "ciw, type the new word, Esc."
+
+[[exercise]]
+buffer = ["let total = count + offset;"]
+cursor = [0, 18]
+goal = ["let total = count - offset;"]
+solutions = ["r-"]
+[exercise.text.ru]
+task = "Замени плюс на минус."
+hint = "Для одного символа объект не нужен: r меняет символ под курсором."
+[exercise.text.en]
+task = "Turn the plus into a minus."
+hint = "One character needs no object: r replaces the character under the cursor."
+
+[[exercise]]
+buffer = ["path = /usr/local/bin;"]
+cursor = [0, 9]
+goal = ["path = "]
+solutions = ["diW"]
+[exercise.text.ru]
+task = "Удали весь путь со слэшами и точкой с запятой одной командой."
+hint = "iw остановится на usr: слэш — другой сорт символов. iW считает по пробелам."
+[exercise.text.en]
+task = "Delete the whole path, slashes and semicolon included, in one command."
+hint = "iw would stop at usr; iW counts by whitespace."
+
+[[exercise]]
+buffer = ["path = /usr/local/bin;"]
+cursor = [0, 9]
+goal = ["path = /tmp;"]
+solutions = ["ciW/tmp;<Esc>"]
+[exercise.text.ru]
+task = "Замени весь путь на /tmp; — одним заходом."
+hint = "ciW выкусывает кусок до пробелов и сразу пускает печатать."
+[exercise.text.en]
+task = "Replace the whole path with /tmp; in one go."
+hint = "ciW clears up to the surrounding blanks and drops you into insert."

@@ -1,0 +1,91 @@
+id = "mastery/refactor"
+chapter = "mastery"
+order = 38
+
+[text.ru]
+title = "Разбор полётов"
+intro = """
+Последний набор — обычные правки из рабочего дня, без подсказок про то, какую
+команду брать. Ищи не «какую клавишу нажать», а «что именно я меняю»: слово,
+внутренность скобок, строку, абзац. Команда найдётся сама — в этом и была вся
+затея с грамматикой.
+"""
+[text.en]
+title = "Debrief"
+intro = """
+The last set: ordinary edits from an ordinary day. Ask not "which key" but
+"what am I changing" — a word, the inside of brackets, a line, a paragraph.
+The command follows from the answer.
+"""
+
+[[exercise]]
+buffer = ['fn connect() {', '    let url = "http://localhost";', '    open(url);', '}']
+cursor = [1, 16]
+goal = ['fn connect() {', '    let url = "https://api.dev";', '    open(url);', '}']
+solutions = ['ci"https://api.dev<Esc>']
+[exercise.text.ru]
+task = "Замени адрес в литерале на https://api.dev"
+hint = "Меняется внутренность кавычек — значит, объект i\"."
+[exercise.text.en]
+task = "Replace the URL literal with https://api.dev"
+hint = 'What changes is the inside of the quotes — the i" object.'
+
+[[exercise]]
+buffer = ["fn area(w: f64, h: f64) -> f64 {", "    w * h", "}"]
+cursor = [0, 8]
+goal = ["fn area() -> f64 {", "    w * h", "}"]
+solutions = ["di(", "dt)"]
+[exercise.text.ru]
+task = "Убери список параметров, скобки оставь."
+hint = "Внутренность скобок — di(, где бы ни стоял курсор внутри них."
+[exercise.text.en]
+task = "Remove the parameter list, keep the parentheses."
+hint = "The inside of the brackets: di(."
+
+[[exercise]]
+buffer = ["// TODO: fix later", "fn ready() -> bool {", "    true", "}"]
+cursor = [0, 0]
+goal = ["fn ready() -> bool {", "    true", "}"]
+solutions = ["dd", "Vd"]
+[exercise.text.ru]
+task = "Сними комментарий TODO."
+hint = "Меняется целая строка — dd."
+[exercise.text.en]
+task = "Drop the TODO comment."
+hint = "A whole line changes — dd."
+
+[[exercise]]
+buffer = ["let a = get(1);", "let b = get(2);", "let c = get(3);"]
+cursor = [0, 12]
+goal = ["let a = get(0);", "let b = get(0);", "let c = get(0);"]
+solutions = ["r0j.j."]
+[exercise.text.ru]
+task = "Сделай аргумент нулём во всех трёх вызовах."
+hint = "r — изменение, значит, точка его повторяет. Столбец у строк одинаковый, j хватает."
+[exercise.text.en]
+task = "Make the argument zero in all three calls."
+hint = "r is a change, so the dot repeats it; the column is the same on every line."
+
+[[exercise]]
+buffer = ["use std::io;", "use std::fs;", "", "fn main() {", "    run();", "}"]
+cursor = [4, 4]
+goal = ["use std::io;", "use std::fs;", "", "fn main() {", "    run();", "    done();", "}"]
+solutions = ["odone();<Esc>", "yypcwdone<Esc>"]
+[exercise.text.ru]
+task = "Допиши вызов done(); следующей строкой внутри main."
+hint = "o открывает строку ниже и сохраняет отступ — четыре пробела набирать не надо."
+[exercise.text.en]
+task = "Add a done(); call on the next line inside main."
+hint = "o opens a line below and keeps the indent."
+
+[[exercise]]
+buffer = ["let x = compute(a, b);", "let y = compute(c, d);"]
+cursor = [0, 16]
+goal = ["let x = compute();", "let y = compute();"]
+solutions = ["di(j."]
+[exercise.text.ru]
+task = "Очисти аргументы в обоих вызовах."
+hint = "Одно удаление объекта, дальше j и точка: ci( и di( повторяются как любое другое изменение."
+[exercise.text.en]
+task = "Clear the arguments in both calls."
+hint = "One object delete, then j and the dot: object edits repeat like any other change."

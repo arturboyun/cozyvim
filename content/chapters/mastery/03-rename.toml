@@ -1,0 +1,71 @@
+id = "mastery/rename"
+chapter = "mastery"
+order = 37
+
+[text.ru]
+title = "Переименование без макросов"
+intro = """
+Вот приём, ради которого стоило учить всё предыдущее. Переименовать переменную
+по файлу можно так: встал на неё, нажал * — поиск запомнил слово и увёз к
+следующему вхождению. Там ciw и новое имя. Дальше n доезжает до очередного
+места, точка повторяет правку. n, точка, n, точка — пока не кончится файл.
+
+Ни макросов, ни регулярных выражений, ни мыши. И на каждом шаге видно, что
+именно меняется, — в отличие от замены по всему файлу одной командой.
+"""
+[text.en]
+title = "Renaming without macros"
+intro = """
+Here is the payoff. Stand on the name, press * — the search remembers the word
+and carries you to the next occurrence. There, ciw and the new name. Then n to
+travel and the dot to repeat. n, dot, n, dot until the file runs out — and you
+see every change as it happens.
+"""
+
+[[exercise]]
+buffer = ["cfg.host", "cfg.port", "other", "cfg.user"]
+cursor = [0, 0]
+goal = ["cfg.host", "env.port", "other", "cfg.user"]
+solutions = ["*ciwenv<Esc>"]
+[exercise.text.ru]
+task = "Дойди поиском до второго cfg и переименуй его в env."
+hint = "* запоминает слово под курсором и сразу везёт к следующему вхождению."
+[exercise.text.en]
+task = "Search to the second cfg and rename it to env."
+hint = "* remembers the word under the cursor and jumps to the next occurrence."
+
+[[exercise]]
+buffer = ["cfg.host", "cfg.port", "other", "cfg.user"]
+cursor = [0, 0]
+goal = ["cfg.host", "env.port", "other", "env.user"]
+solutions = ["*ciwenv<Esc>n."]
+[exercise.text.ru]
+task = "Переименуй ещё и третье вхождение — точкой."
+hint = "n везёт к следующему cfg, точка повторяет ciw вместе с напечатанным словом."
+[exercise.text.en]
+task = "Rename the third occurrence too, with the dot."
+hint = "n travels to the next cfg, the dot repeats ciw and the word you typed."
+
+[[exercise]]
+buffer = ["cfg.host", "cfg.port", "other", "cfg.user"]
+cursor = [0, 0]
+goal = ["env.host", "env.port", "other", "env.user"]
+solutions = ["*ciwenv<Esc>n.n."]
+[exercise.text.ru]
+task = "Переименуй все три вхождения cfg в env."
+hint = "Поиск заворачивается: после последнего n вернёт к первой строке, и точка добьёт её."
+[exercise.text.en]
+task = "Rename all three occurrences of cfg to env."
+hint = "Search wraps: after the last one, n returns to the first line and the dot finishes it."
+
+[[exercise]]
+buffer = ["fn read(p) {}", "fn write(p) {}", "fn seek(p) {}"]
+cursor = [0, 8]
+goal = ["fn read(path) {}", "fn write(path) {}", "fn seek(path) {}"]
+solutions = ["*ciwpath<Esc>n.n."]
+[exercise.text.ru]
+task = "Дай параметру во всех трёх функциях имя path."
+hint = "j сюда не годится: после правки курсор уезжает в другой столбец. Поиск встаёт ровно на слово."
+[exercise.text.en]
+task = "Name the parameter path in all three functions."
+hint = "j will not do: after the edit the cursor sits in a different column. The search lands exactly on the word."

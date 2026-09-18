@@ -1,0 +1,94 @@
+id = "textobj/brackets"
+chapter = "textobj"
+order = 17
+
+[text.ru]
+title = "Скобки: i( i[ i{"
+intro = """
+Аргументы функции, индекс массива, тело литерала — всё это пары скобок.
+i( берёт то, что внутри, a( — вместе со скобками. Синонимы на любой вкус:
+i(, i) и ib — одно и то же; i{, i} и iB — тоже.
+
+Со вложенностью объект ведёт себя правильно: берётся та пара, внутри которой
+стоит курсор, а не первая попавшаяся. Поэтому важно, где курсор: объект ищет
+открывающую скобку назад от него.
+"""
+[text.en]
+title = "Brackets: i( i[ i{"
+intro = """
+Arguments, indices, literal bodies — all pairs of brackets. i( takes what is
+inside, a( takes the brackets too. i(, i) and ib are the same thing.
+With nesting, the pair enclosing the cursor wins, so cursor placement matters.
+"""
+
+[[exercise]]
+buffer = ["fn main(argc, argv) {}"]
+cursor = [0, 10]
+goal = ["fn main() {}"]
+solutions = ["di(", "dib", "di)"]
+[exercise.text.ru]
+task = "Очисти список аргументов, скобки оставь."
+hint = "di( — три клавиши вместо счёта символов."
+[exercise.text.en]
+task = "Clear the argument list, keep the parentheses."
+hint = "di( — three keys instead of counting characters."
+
+[[exercise]]
+buffer = ["fn main(argc, argv) {}"]
+cursor = [0, 10]
+goal = ["fn main(void) {}"]
+solutions = ["ci(void<Esc>"]
+[exercise.text.ru]
+task = "Замени аргументы на void."
+hint = "ci( очищает скобки и оставляет курсор внутри них."
+[exercise.text.en]
+task = "Replace the arguments with void."
+hint = "ci( clears the parens and leaves the cursor inside."
+
+[[exercise]]
+buffer = ["fn main(argc, argv) {}"]
+cursor = [0, 10]
+goal = ["fn main {}"]
+solutions = ["da(", "dab", "da)"]
+[exercise.text.ru]
+task = "Удали скобки вместе с содержимым."
+hint = "a( — «a block»: скобки входят в объект."
+[exercise.text.en]
+task = "Delete the parentheses along with their contents."
+hint = "a( includes the brackets themselves."
+
+[[exercise]]
+buffer = ["let cfg = { debug: true };"]
+cursor = [0, 13]
+goal = ["let cfg = {};"]
+solutions = ["di{", "diB", "di}"]
+[exercise.text.ru]
+task = "Очисти тело литерала, фигурные скобки оставь."
+hint = "Фигурные — тот же объект: i{ или iB."
+[exercise.text.en]
+task = "Clear the literal body, keep the braces."
+hint = "Braces use the same object: i{ or iB."
+
+[[exercise]]
+buffer = ["let row = grid[index + 1];"]
+cursor = [0, 17]
+goal = ["let row = grid[0];"]
+solutions = ["ci[0<Esc>", "ci]0<Esc>"]
+[exercise.text.ru]
+task = "Замени выражение в индексе на 0."
+hint = "Квадратные скобки — i[ или i]."
+[exercise.text.en]
+task = "Replace the index expression with 0."
+hint = "Square brackets: i[ or i]."
+
+[[exercise]]
+buffer = ["print(fmt(x), y)"]
+cursor = [0, 10]
+goal = ["print(fmt(), y)"]
+solutions = ["di("]
+[exercise.text.ru]
+task = "Курсор на x, внутри вложенных скобок. Очисти только внутренние."
+hint = "Объект берёт ту пару, внутри которой стоит курсор, а не самую внешнюю."
+[exercise.text.en]
+task = "The cursor is on x, inside nested parens. Clear only the inner pair."
+hint = "The object takes the pair enclosing the cursor, not the outermost one."

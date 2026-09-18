@@ -1,0 +1,71 @@
+id = "registers/named"
+chapter = "registers"
+order = 27
+
+[text.ru]
+title = 'Именованные регистры: "a'
+intro = """
+Безымянный регистр один, и любое следующее удаление его затирает. Скопировал
+строку, по дороге удалил лишний символ — копия пропала.
+
+Поэтому регистров двадцать шесть, по букве алфавита. Префикс " перед командой
+говорит, в какой из них класть и из какого брать: "ayy кладёт строку в регистр
+a, "ap вставляет именно её, что бы ни случилось с безымянным по дороге.
+
+Правило простое: всё, что переживёт больше одной команды, кладут в именной.
+"""
+[text.en]
+title = 'Named registers: "a'
+intro = """
+There is only one unnamed register, and the next delete overwrites it. So vim
+has twenty-six more, one per letter. The " prefix picks one: "ayy stores the
+line in register a, "ap pastes exactly that, whatever happened in between.
+"""
+
+[[exercise]]
+buffer = ["const HOST = 'local';", "const PORT = 8080;"]
+cursor = [0, 0]
+goal = ["const HOST = 'local';", "const PORT = 8080;", "const HOST = 'local';"]
+solutions = ['"ayyj"ap']
+[exercise.text.ru]
+task = "Скопируй первую строку в регистр a и вставь её в конец файла."
+hint = 'Префикс " плюс буква — перед копированием и перед вставкой.'
+[exercise.text.en]
+task = "Copy the first line into register a and paste it at the end of the file."
+hint = 'The " prefix plus a letter, both when yanking and when pasting.'
+
+[[exercise]]
+buffer = ["keep me", "junk", "paste here"]
+cursor = [0, 0]
+goal = ["keep me", "paste here", "keep me"]
+solutions = ['"ayyjddj"ap']
+[exercise.text.ru]
+task = "Запомни первую строку в регистр a, удали вторую, вставь запомненное в конец."
+hint = "Удаление между копированием и вставкой затёрло бы безымянный регистр — именной уцелеет."
+[exercise.text.en]
+task = "Store the first line in register a, delete the second, paste the stored line at the end."
+hint = "A delete in between would clobber the unnamed register; a named one survives."
+
+[[exercise]]
+buffer = ["alpha", "beta"]
+cursor = [0, 0]
+goal = ["beta", "alpha"]
+solutions = ['"add"ap', "ddp"]
+[exercise.text.ru]
+task = "Поменяй строки местами — как угодно."
+hint = "Через именной регистр или через безымянный — результат один. Имя нужно там, где путь длиннее."
+[exercise.text.en]
+task = "Swap the two lines, any way you like."
+hint = "A named register or the unnamed one — same result. Names earn their keep on longer paths."
+
+[[exercise]]
+buffer = ["let a = ;", "let b = 42;"]
+cursor = [1, 8]
+goal = ["let a = 42;", "let b = 42;"]
+solutions = ['"cyiwk$"cP', "yiwk$P"]
+[exercise.text.ru]
+task = "Скопируй 42 в первую строку, перед точкой с запятой."
+hint = "Регистр c держит слово, пока курсор едет наверх."
+[exercise.text.en]
+task = "Copy the 42 into the first line, before the semicolon."
+hint = "Register c holds the word while the cursor travels up."

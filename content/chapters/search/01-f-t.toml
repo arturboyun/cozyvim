@@ -1,0 +1,88 @@
+id = "search/f-t"
+chapter = "search"
+order = 20
+
+[text.ru]
+title = "f и t: прицел внутри строки"
+intro = """
+Внутри строки w и l работают грубо: одно слишком крупно, другое слишком мелко.
+f — find: прыжок на указанный символ. Нажал f, потом символ — курсор на нём.
+
+t — till: встать вплотную перед символом. Разница в один шаг, но она решает,
+что попадёт под оператор: dt) очистит скобку, df) съест и её.
+
+Заглавные работают назад: F ищет символ левее курсора, T встаёт сразу за ним.
+Все четыре живут только внутри текущей строки — это прицел, а не путешествие.
+"""
+[text.en]
+title = "f and t: aiming inside a line"
+intro = """
+f jumps onto a character, t stops right before it. That one-step difference
+decides what an operator takes. Capitals go backwards: F finds to the left,
+T stops just after it. All four stay inside the current line.
+"""
+
+[[exercise]]
+buffer = ["let value = compute(a, b);"]
+cursor = [0, 0]
+goal = ["let value = compute(a, b);"]
+goal_cursor = [0, 19]
+solutions = ["f("]
+[exercise.text.ru]
+task = "Прыгни на открывающую скобку."
+hint = "f плюс сам символ. Считать столбцы не нужно."
+[exercise.text.en]
+task = "Jump onto the opening parenthesis."
+hint = "f then the character itself."
+
+[[exercise]]
+buffer = ["let value = compute(a, b);"]
+cursor = [0, 0]
+goal = ["let value = compute(a, b);"]
+goal_cursor = [0, 18]
+solutions = ["t("]
+[exercise.text.ru]
+task = "Встань вплотную перед скобкой, на букву e."
+hint = "t останавливается на шаг раньше, чем f."
+[exercise.text.en]
+task = "Stop right before the parenthesis, on the e."
+hint = "t stops one step earlier than f."
+
+[[exercise]]
+buffer = ["let value = compute(a, b);"]
+cursor = [0, 20]
+goal = ["let value = compute(a, b);"]
+goal_cursor = [0, 10]
+solutions = ["F="]
+[exercise.text.ru]
+task = "Вернись назад на знак равенства."
+hint = "Заглавная F — тот же прицел, только влево."
+[exercise.text.en]
+task = "Go back to the equals sign."
+hint = "Capital F aims to the left."
+
+[[exercise]]
+buffer = ["let value = compute(a, b);"]
+cursor = [0, 20]
+goal = ["let value = compute(a, b);"]
+goal_cursor = [0, 11]
+solutions = ["T="]
+[exercise.text.ru]
+task = "Встань сразу справа от знака равенства, на пробел."
+hint = "T — зеркало t: останавливается за символом."
+[exercise.text.en]
+task = "Land just to the right of the equals sign."
+hint = "T mirrors t: it stops just past the character."
+
+[[exercise]]
+buffer = ["let value = compute(a, b);"]
+cursor = [0, 0]
+goal = ["let value = compute(a, b);"]
+goal_cursor = [0, 25]
+solutions = ["f;", "$"]
+[exercise.text.ru]
+task = "Встань на точку с запятой в конце."
+hint = "Сюда ведут два пути: прицел f; и движение $. Оба верны."
+[exercise.text.en]
+task = "Land on the trailing semicolon."
+hint = "Two ways in: f; and $. Both are right."

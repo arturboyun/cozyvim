@@ -1,0 +1,77 @@
+id = "registers/drill"
+chapter = "registers"
+order = 29
+
+[text.ru]
+title = "Правка без страха"
+intro = """
+Здесь всё вместе: поиск довозит, изменение делает работу, точка размножает её,
+регистр держит текст, u страхует. Это и есть обычный рабочий цикл — в нём нет
+ни одной команды сложнее трёх клавиш.
+"""
+[text.en]
+title = "Editing without fear"
+intro = """
+Everything together: search gets you there, a change does the work, the dot
+multiplies it, a register holds the text, u covers your back.
+"""
+
+[[exercise]]
+buffer = ["let host = cfg.host;", "let port = cfg.port;", "let user = cfg.user;"]
+cursor = [0, 11]
+goal = ["let host = env.host;", "let port = env.port;", "let user = env.user;"]
+solutions = ["ciwenv<Esc>j.j."]
+[exercise.text.ru]
+task = "Замени cfg на env во всех трёх строках."
+hint = "Одно ciw, дальше j и точка. Курсор после точки остаётся в том же столбце."
+[exercise.text.en]
+task = "Replace cfg with env on all three lines."
+hint = "One ciw, then j and the dot."
+
+[[exercise]]
+buffer = ["fn run() {", "    setup();", "    work();", "    teardown();", "}"]
+cursor = [2, 4]
+goal = ["fn run() {", "    setup();", "    teardown();", "    work();", "}"]
+solutions = ["ddp"]
+[exercise.text.ru]
+task = "Перенеси вызов work ниже teardown."
+hint = "Перемещение строки — это dd плюс p, а не выделение мышью."
+[exercise.text.en]
+task = "Move the work call below teardown."
+hint = "Moving a line is dd plus p."
+
+[[exercise]]
+buffer = ["TODO: remove", "fn real() {}", "TODO: remove"]
+cursor = [0, 0]
+goal = ["fn real() {}"]
+solutions = ["ddj.", "ddGdd"]
+[exercise.text.ru]
+task = "Удали обе строки с TODO."
+hint = "dd, доехать до второй и точка. Или dd, G и ещё раз dd."
+[exercise.text.en]
+task = "Delete both TODO lines."
+hint = "dd, travel, dot. Or dd, G, dd again."
+
+[[exercise]]
+buffer = ["let timeout = 30;", "let retries = 30;"]
+cursor = [0, 14]
+goal = ["let timeout = 60;", "let retries = 30;"]
+solutions = ["ciw60<Esc>"]
+[exercise.text.ru]
+task = "Поменяй только первое значение на 60 — вторая строка остаётся как есть."
+hint = "Здесь точка не нужна: повторять нечего. Не всякая правка массовая."
+[exercise.text.en]
+task = "Change only the first value to 60 — leave the second line alone."
+hint = "No dot here: not every edit is a mass edit."
+
+[[exercise]]
+buffer = ["header", "body", "footer"]
+cursor = [1, 0]
+goal = ["header", "body", "body", "footer"]
+solutions = ["yyp", '"byy"bp']
+[exercise.text.ru]
+task = "Продублируй среднюю строку."
+hint = "yy и p. Именной регистр тут избыточен, но тоже сработает."
+[exercise.text.en]
+task = "Duplicate the middle line."
+hint = "yy and p. A named register works too, though it is overkill."

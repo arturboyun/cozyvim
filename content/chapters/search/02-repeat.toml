@@ -1,0 +1,74 @@
+id = "search/repeat"
+chapter = "search"
+order = 21
+
+[text.ru]
+title = "; и , — повтор прицела"
+intro = """
+Первый символ в строке редко тот, который нужен. Вместо того чтобы набирать
+f, f, f заново, есть ; — повторить последний прицел в ту же сторону,
+и , — повторить его в обратную.
+
+Счётчик работает так же: 3f, сразу прыгает на третью запятую. Что удобнее —
+3f, или f,;; — дело вкуса и того, успел ли ты сосчитать. Промахнулся на один
+символ вперёд? Нажми , и вернись.
+"""
+[text.en]
+title = "; and , — repeating the aim"
+intro = """
+Instead of typing f, f, f again, ; repeats the last aim in the same direction
+and , repeats it backwards. A count does the same job: 3f, lands on the third
+comma. Overshot by one? Press , to come back.
+"""
+
+[[exercise]]
+buffer = ["fn f(a, b, c, d) {}"]
+cursor = [0, 0]
+goal = ["fn f(a, b, c, d) {}"]
+goal_cursor = [0, 9]
+solutions = ["f,;", "2f,"]
+[exercise.text.ru]
+task = "Прыгни на вторую запятую."
+hint = "Прицелься f, и повтори через ; — или скажи сразу 2f,."
+[exercise.text.en]
+task = "Jump to the second comma."
+hint = "Aim with f, and repeat with ; — or say 2f, at once."
+
+[[exercise]]
+buffer = ["fn f(a, b, c, d) {}"]
+cursor = [0, 0]
+goal = ["fn f(a, b, c, d) {}"]
+goal_cursor = [0, 12]
+solutions = ["3f,", "f,;;"]
+[exercise.text.ru]
+task = "Прыгни на третью запятую."
+hint = "Счётчик перед f или два повтора через ; — результат один."
+[exercise.text.en]
+task = "Jump to the third comma."
+hint = "A count before f, or two repeats with ; — same result."
+
+[[exercise]]
+buffer = ["fn f(a, b, c, d) {}"]
+cursor = [0, 0]
+goal = ["fn f(a, b, c, d) {}"]
+goal_cursor = [0, 9]
+solutions = ["3f,,"]
+[exercise.text.ru]
+task = "Перелети на третью запятую и вернись на вторую."
+hint = "Запятая — повтор прицела в обратную сторону. Так чинят промах."
+[exercise.text.en]
+task = "Overshoot to the third comma, then step back to the second."
+hint = ", repeats the aim backwards — that is how you fix an overshoot."
+
+[[exercise]]
+buffer = ["path = a/b/c/d/e"]
+cursor = [0, 15]
+goal = ["path = a/b/c/d/e"]
+goal_cursor = [0, 10]
+solutions = ["3F/", "F/;;"]
+[exercise.text.ru]
+task = "Вернись назад на третий слэш, считая от конца."
+hint = "Повтор работает и для заглавных: F/ и два ;."
+[exercise.text.en]
+task = "Go back to the third slash counting from the end."
+hint = "Repeat works for capitals too: F/ then two ;."

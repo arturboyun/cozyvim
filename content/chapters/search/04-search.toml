@@ -1,0 +1,87 @@
+id = "search/search"
+chapter = "search"
+order = 23
+
+[text.ru]
+title = "/ и ? — поиск по файлу"
+intro = """
+f не выходит за пределы строки. Когда цель дальше, работает поиск: / — вперёд,
+? — назад. Набираешь слово, жмёшь Enter — курсор на первом совпадении.
+
+Дальше n — следующее совпадение, N — предыдущее. Поиск заворачивается: дойдя до
+конца файла, он продолжает с начала, поэтому n можно жать не глядя.
+
+Поиск — это движение, а значит, он и есть навигация: не листать глазами, а
+назвать то, что ищешь.
+"""
+[text.en]
+title = "/ and ? — searching the file"
+intro = """
+When the target is off the current line, search: / forward, ? backward. Type
+the word, press Enter, and the cursor lands on the first match. n goes to the
+next match, N to the previous. Search wraps around the end of the file.
+"""
+
+[[exercise]]
+buffer = ["fn parse(input: &str) -> Ast {", "    let tokens = lex(input);", "    let ast = build(tokens);", "    ast", "}"]
+cursor = [0, 0]
+goal = ["fn parse(input: &str) -> Ast {", "    let tokens = lex(input);", "    let ast = build(tokens);", "    ast", "}"]
+goal_cursor = [1, 8]
+solutions = ["/tokens<CR>"]
+[exercise.text.ru]
+task = "Найди первое вхождение tokens."
+hint = "/ открывает строку поиска, Enter выполняет её."
+[exercise.text.en]
+task = "Find the first occurrence of tokens."
+hint = "/ opens the search line, Enter runs it."
+
+[[exercise]]
+buffer = ["fn parse(input: &str) -> Ast {", "    let tokens = lex(input);", "    let ast = build(tokens);", "    ast", "}"]
+cursor = [0, 0]
+goal = ["fn parse(input: &str) -> Ast {", "    let tokens = lex(input);", "    let ast = build(tokens);", "    ast", "}"]
+goal_cursor = [2, 20]
+solutions = ["/tokens<CR>n"]
+[exercise.text.ru]
+task = "Дойди до второго вхождения tokens."
+hint = "n — следующее совпадение того же поиска, набирать заново не нужно."
+[exercise.text.en]
+task = "Reach the second occurrence of tokens."
+hint = "n repeats the same search forward."
+
+[[exercise]]
+buffer = ["fn parse(input: &str) -> Ast {", "    let tokens = lex(input);", "    let ast = build(tokens);", "    ast", "}"]
+cursor = [0, 0]
+goal = ["fn parse(input: &str) -> Ast {", "    let tokens = lex(input);", "    let ast = build(tokens);", "    ast", "}"]
+goal_cursor = [1, 8]
+solutions = ["/tokens<CR>nn", "/tokens<CR>nN"]
+[exercise.text.ru]
+task = "Пройди оба вхождения и вернись на первое."
+hint = "N — назад по тому же поиску. А ещё поиск заворачивается: второе n тоже вернёт в начало."
+[exercise.text.en]
+task = "Walk both matches and come back to the first."
+hint = "N goes backwards; and since search wraps, a second n also returns to the top."
+
+[[exercise]]
+buffer = ["fn parse(input: &str) -> Ast {", "    let tokens = lex(input);", "    let ast = build(tokens);", "    ast", "}"]
+cursor = [4, 0]
+goal = ["fn parse(input: &str) -> Ast {", "    let tokens = lex(input);", "    let ast = build(tokens);", "    ast", "}"]
+goal_cursor = [2, 4]
+solutions = ["?let<CR>"]
+[exercise.text.ru]
+task = "Из конца файла найди ближайшее let выше."
+hint = "? — тот же поиск, только вверх."
+[exercise.text.en]
+task = "From the end of the file, find the nearest let above."
+hint = "? is the same search, upwards."
+
+[[exercise]]
+buffer = ["fn parse(input: &str) -> Ast {", "    let tokens = lex(input);", "    let ast = build(tokens);", "    ast", "}"]
+cursor = [0, 0]
+goal = ["fn parse(input: &str) -> Ast {", "    let tokens = lex(input);", "    let  = build(tokens);", "    ast", "}"]
+solutions = ["/ast<CR>diw"]
+[exercise.text.ru]
+task = "Найди слово ast и удали его."
+hint = "Сначала поиском доберись до нужного вхождения, потом работай обычными командами."
+[exercise.text.en]
+task = "Find the word ast and delete it."
+hint = "Search to the right occurrence first, then edit with ordinary commands."

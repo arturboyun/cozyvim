@@ -1,0 +1,82 @@
+id = "visual/V"
+chapter = "visual"
+order = 31
+
+[text.ru]
+title = "V — выделение строками"
+intro = """
+Заглавная V выделяет целыми строками, как бы ни стоял курсор. Дальше j и k
+растягивают выделение вниз и вверх, а d, c и y работают построчно — ровно как
+dd, cc и yy, только границы видны заранее.
+
+Это самый честный способ переносить куски кода: выделил Vjj, вырезал d, доехал
+до нового места, вставил p. Регистр помнит, что выделение было строчным,
+поэтому вставка встанет отдельными строками, а не влезет в середину текущей.
+"""
+[text.en]
+title = "V — selecting whole lines"
+intro = """
+Capital V selects whole lines; j and k stretch the selection, and d, c, y then
+work linewise — like dd, cc, yy but with visible bounds. The register remembers
+the selection was linewise, so p pastes whole lines.
+"""
+
+[[exercise]]
+buffer = ["fn main() {", "    let a = 1;", "    let b = 2;", "    let c = 3;", "}"]
+cursor = [1, 8]
+goal = ["fn main() {", "    let b = 2;", "    let c = 3;", "}"]
+solutions = ["Vd", "dd"]
+[exercise.text.ru]
+task = "Удали строку с a, где бы ни стоял курсор в ней."
+hint = "V берёт строку целиком — столбец курсора не важен."
+[exercise.text.en]
+task = "Delete the line with a, whatever column the cursor is in."
+hint = "V takes the whole line; the column does not matter."
+
+[[exercise]]
+buffer = ["fn main() {", "    let a = 1;", "    let b = 2;", "    let c = 3;", "}"]
+cursor = [1, 4]
+goal = ["fn main() {", "    let c = 3;", "}"]
+solutions = ["Vjd", "2dd"]
+[exercise.text.ru]
+task = "Удали две строки: a и b."
+hint = "Vj растягивает выделение на строку вниз, d режет обе сразу."
+[exercise.text.en]
+task = "Delete two lines: a and b."
+hint = "Vj stretches the selection one line down."
+
+[[exercise]]
+buffer = ["fn main() {", "    let a = 1;", "    let b = 2;", "    let c = 3;", "}"]
+cursor = [1, 4]
+goal = ["fn main() {", "    let a = 1;", "    let b = 2;", "    let a = 1;", "    let b = 2;", "    let c = 3;", "}"]
+solutions = ["Vjyjp", "2yyjp"]
+[exercise.text.ru]
+task = "Продублируй пару строк a и b."
+hint = "y копирует выделение построчно и возвращает курсор в его начало — доедь до конца блока, прежде чем вставлять."
+[exercise.text.en]
+task = "Duplicate the a and b lines."
+hint = "y copies linewise and puts the cursor back at the start — travel to the end of the block before pasting."
+
+[[exercise]]
+buffer = ["fn main() {", "    let a = 1;", "    let b = 2;", "    let c = 3;", "}"]
+cursor = [1, 4]
+goal = ["fn main() {", "    let sum = 6;", "    let c = 3;", "}"]
+solutions = ["Vjclet sum = 6;<Esc>"]
+[exercise.text.ru]
+task = "Замени две первые объявления одной строкой let sum = 6;"
+hint = "c после V чистит строки и сохраняет отступ — печатать пробелы заново не нужно."
+[exercise.text.en]
+task = "Replace the first two declarations with a single let sum = 6; line."
+hint = "c after V clears the lines but keeps the indent."
+
+[[exercise]]
+buffer = ["    work();", "    setup();"]
+cursor = [0, 4]
+goal = ["    setup();", "    work();"]
+solutions = ["Vdp", "ddp"]
+[exercise.text.ru]
+task = "Поставь setup перед work."
+hint = "Вырезал строку — курсор оказался на соседней; p кладёт вырезанное под неё."
+[exercise.text.en]
+task = "Put setup before work."
+hint = "Cutting the line leaves the cursor on its neighbour; p drops it below."

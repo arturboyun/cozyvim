@@ -1,0 +1,96 @@
+id = "visual/v"
+chapter = "visual"
+order = 30
+
+[text.ru]
+title = "v — сначала выделить, потом решить"
+intro = """
+До сих пор порядок был такой: оператор, потом цель. Визуальный режим
+переворачивает его: сначала v, потом движениями растягиваешь выделение и
+видишь его глазами, и только в конце говоришь, что с ним сделать — d, c или y.
+
+Это не замена грамматике, а её отладчик. Когда границы очевидны, короче сказать
+de. Когда кусок сложный и хочется убедиться, что захвачено ровно то, что надо, —
+v и движения. Esc снимает выделение, ничего не меняя.
+
+Внутри выделения работают все знакомые движения: w, e, $, f, }, счётчики.
+"""
+[text.en]
+title = "v — select first, decide later"
+intro = """
+Visual mode flips the order: press v, stretch the selection with motions, see
+it with your eyes, and only then say d, c or y. It is not a replacement for the
+grammar but a debugger for it. Esc drops the selection without changing anything.
+"""
+
+[[exercise]]
+buffer = ["let value = 42;"]
+cursor = [0, 4]
+goal = ["let  = 42;"]
+solutions = ["de", "ved"]
+[exercise.text.ru]
+task = "Удали слово value, пробелы вокруг оставь."
+hint = "ved — выделить до конца слова и удалить. de делает то же за две клавиши."
+[exercise.text.en]
+task = "Delete the word value, keeping the spaces."
+hint = "ved selects to the end of the word and deletes; de does it in two keys."
+
+[[exercise]]
+buffer = ["let value = 42;"]
+cursor = [0, 4]
+goal = ["let "]
+solutions = ["D", "d$", "v$d"]
+[exercise.text.ru]
+task = "Удали всё от курсора до конца строки."
+hint = "Выделение растягивается любым движением, в том числе $."
+[exercise.text.en]
+task = "Delete from the cursor to the end of the line."
+hint = "Any motion stretches the selection, $ included."
+
+[[exercise]]
+buffer = ["let value = 42;"]
+cursor = [0, 4]
+goal = ["let total = 42;"]
+solutions = ["vectotal<Esc>", "ciwtotal<Esc>"]
+[exercise.text.ru]
+task = "Замени value на total."
+hint = "После выделения c делает то же, что делал бы с движением: чистит и пускает печатать."
+[exercise.text.en]
+task = "Replace value with total."
+hint = "After a selection, c clears it and drops you into insert."
+
+[[exercise]]
+buffer = ["fn f(a, b, c) {}"]
+cursor = [0, 5]
+goal = ["fn f() {}"]
+solutions = ["di(", "dt)", "vt)d"]
+[exercise.text.ru]
+task = "Очисти список аргументов."
+hint = "vt) показывает захваченное до того, как ты нажмёшь d — удобно, когда скобки вложенные."
+[exercise.text.en]
+task = "Clear the argument list."
+hint = "vt) shows what is caught before you press d — handy with nested brackets."
+
+[[exercise]]
+buffer = ["hello brave new world"]
+cursor = [0, 6]
+goal = ["hello world"]
+solutions = ["v2edx", "2dw"]
+[exercise.text.ru]
+task = "Выкинь два слова в середине: brave и new."
+hint = "Счётчик действует и внутри выделения: 2e растягивает его через два слова."
+[exercise.text.en]
+task = "Drop the two middle words, brave and new."
+hint = "Counts work inside a selection too: 2e stretches it across two words."
+
+[[exercise]]
+buffer = ["let value = 42;"]
+cursor = [0, 4]
+goal = ["let value = 42;"]
+solutions = ["ve<Esc>"]
+[exercise.text.ru]
+task = "Выдели слово и передумай — оставь строку нетронутой."
+hint = "Esc выходит из визуального режима, не трогая текст. Ошибиться выделением не страшно."
+[exercise.text.en]
+task = "Select the word, then change your mind and leave the line untouched."
+hint = "Esc leaves visual mode without touching the text."

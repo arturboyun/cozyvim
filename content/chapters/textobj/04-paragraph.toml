@@ -1,0 +1,69 @@
+id = "textobj/paragraph"
+chapter = "textobj"
+order = 18
+
+[text.ru]
+title = "Абзац: ip и ap"
+intro = """
+Абзац в vim — это просто цепочка непустых строк между пустыми. Для кода это
+блок импортов, группа полей, кусок конфига.
+
+ip — сами строки абзаца. ap — абзац вместе с пустой строкой после него,
+то есть ровно то, что нужно, чтобы выкусить блок и не оставить дырку.
+Объект построчный: он всегда работает целыми строками, где бы ни стоял курсор.
+"""
+[text.en]
+title = "Paragraph: ip and ap"
+intro = """
+A paragraph is a run of non-empty lines between blank ones — an import block, a
+group of fields. ip is the lines themselves, ap includes the blank line after,
+which is exactly what you want when removing a block without leaving a hole.
+"""
+
+[[exercise]]
+buffer = ["use std::fs;", "use std::io;", "", "fn main() {", "}"]
+cursor = [0, 0]
+goal = ["", "fn main() {", "}"]
+solutions = ["dip"]
+[exercise.text.ru]
+task = "Удали блок импортов, пустую строку под ним оставь."
+hint = "ip — непустые строки абзаца, без разделителя."
+[exercise.text.en]
+task = "Delete the import block, keep the blank line below."
+hint = "ip is the non-empty lines only."
+
+[[exercise]]
+buffer = ["use std::fs;", "use std::io;", "", "fn main() {", "}"]
+cursor = [1, 4]
+goal = ["fn main() {", "}"]
+solutions = ["dap"]
+[exercise.text.ru]
+task = "Удали блок импортов вместе с пустой строкой — без дырки."
+hint = "ap забирает разделитель, курсору неважно, на какой он строке абзаца."
+[exercise.text.en]
+task = "Delete the import block along with the blank line — no hole left."
+hint = "ap takes the separator with it."
+
+[[exercise]]
+buffer = ["use std::fs;", "use std::io;", "", "fn main() {", "}"]
+cursor = [0, 0]
+goal = ["use std::fs;", "use std::io;", "use std::fs;", "use std::io;", "", "fn main() {", "}"]
+solutions = ["yipjp"]
+[exercise.text.ru]
+task = "Продублируй блок импортов целиком."
+hint = "yip копирует абзац и оставляет курсор на его первой строке — спустись на последнюю, потом вставляй."
+[exercise.text.en]
+task = "Duplicate the whole import block."
+hint = "yip yanks the paragraph and leaves the cursor on its first line — move to the last one before pasting."
+
+[[exercise]]
+buffer = ["use std::fs;", "use std::io;", "", "fn main() {", "}"]
+cursor = [0, 0]
+goal = ["use std::fmt;", "", "fn main() {", "}"]
+solutions = ["cipuse std::fmt;<Esc>"]
+[exercise.text.ru]
+task = "Замени весь блок импортов одной строкой use std::fmt;"
+hint = "cip убирает строки абзаца и оставляет одну пустую под печать."
+[exercise.text.en]
+task = "Replace the whole import block with a single use std::fmt; line."
+hint = "cip removes the paragraph lines and leaves one empty line to type into."

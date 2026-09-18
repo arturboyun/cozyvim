@@ -1,0 +1,85 @@
+id = "registers/dot"
+chapter = "registers"
+order = 28
+
+[text.ru]
+title = ". — повторить изменение"
+intro = """
+Точка повторяет последнее изменение. Не последнее нажатие и не движение —
+именно изменение: dd, x, ciw вместе с напечатанным словом, A с добавленным
+хвостом и Esc.
+
+Отсюда рабочий приём: сделай правку один раз аккуратно, потом доезжай до
+следующего места и жми точку. Движение не сбивает её: между повторами можно
+свободно ходить по файлу.
+
+Правило, которое стоит унести: делай правку так, чтобы её можно было повторить
+точкой. Одна команда лучше трёх, даже если руками получилось бы столько же.
+"""
+[text.en]
+title = ". — repeat the change"
+intro = """
+The dot repeats the last change — not the last keypress and not a motion, but
+the change: dd, x, ciw with the word you typed, A with its tail and Esc. So make
+the edit once, carefully, then travel and press dot. Motions never disturb it.
+"""
+
+[[exercise]]
+buffer = ["*one", "*two", "*three"]
+cursor = [0, 0]
+goal = ["one", "two", "three"]
+solutions = ["xj.j."]
+[exercise.text.ru]
+task = "Убери звёздочку в начале каждой строки."
+hint = "Один x, дальше только доезжай и жми точку."
+[exercise.text.en]
+task = "Strip the leading star from every line."
+hint = "One x, then just travel and press dot."
+
+[[exercise]]
+buffer = ["let a = 1", "let b = 2"]
+cursor = [0, 0]
+goal = ["let a = 1;", "let b = 2;"]
+solutions = ["A;<Esc>j."]
+[exercise.text.ru]
+task = "Дай обеим строкам недостающую точку с запятой."
+hint = "Заход в insert от A до Esc — одно изменение, точка повторяет его целиком."
+[exercise.text.en]
+task = "Give both lines the semicolon they are missing."
+hint = "The insert session from A to Esc is one change; the dot repeats all of it."
+
+[[exercise]]
+buffer = ["old = 1;", "old = 2;"]
+cursor = [0, 0]
+goal = ["new = 1;", "new = 2;"]
+solutions = ["ciwnew<Esc>j."]
+[exercise.text.ru]
+task = "Переименуй old в new в обеих строках."
+hint = "ciw вместе с напечатанным словом — тоже одно изменение."
+[exercise.text.en]
+task = "Rename old to new on both lines."
+hint = "ciw plus the typed word is a single change too."
+
+[[exercise]]
+buffer = ["keep", "drop", "drop", "drop", "keep"]
+cursor = [1, 0]
+goal = ["keep", "keep"]
+solutions = ["dd..", "3dd"]
+[exercise.text.ru]
+task = "Удали три средние строки."
+hint = "Точка работает и с dd. Счётчик 3dd сделает то же короче — выбирай по ситуации."
+[exercise.text.en]
+task = "Delete the three middle lines."
+hint = "The dot works with dd; 3dd is shorter. Pick whichever fits."
+
+[[exercise]]
+buffer = ["fn a(y) {}", "fn b(y) {}", "fn c(y) {}"]
+cursor = [0, 5]
+goal = ["fn a(x) {}", "fn b(x) {}", "fn c(x) {}"]
+solutions = ["ci(x<Esc>j.j."]
+[exercise.text.ru]
+task = "Переименуй аргумент y в x во всех трёх сигнатурах."
+hint = "Объект внутри изменения повторяется вместе с ним: ci( ищет скобки заново на каждой строке."
+[exercise.text.en]
+task = "Rename the y argument to x in all three signatures."
+hint = "The object is part of the change: ci( finds the parens again on each line."
