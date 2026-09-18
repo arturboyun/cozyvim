@@ -5,8 +5,8 @@ use cozyvim::app::App;
 fn main() -> eframe::Result<()> {
     let options = eframe::NativeOptions {
         viewport: eframe::egui::ViewportBuilder::default()
-            .with_inner_size([980.0, 760.0])
-            .with_min_inner_size([760.0, 600.0])
+            .with_inner_size([1650.0, 920.0])
+            .with_min_inner_size([720.0, 480.0])
             .with_title("cozyvim"),
         ..Default::default()
     };
